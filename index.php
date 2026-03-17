@@ -9,7 +9,7 @@ include 'header.php';
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="format-detection" content="telephone=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="author" content="DMMMSU Environmental Concerns">
     <meta name="keywords" content="recycling, sustainable, eco-friendly, marketplace, DMMMSU">
     <meta name="description" content="Join Eco Cycle - DMMMSU's sustainable marketplace for recycled products. Reduce waste, support local artisans, and make eco-conscious choices.">
