@@ -86,18 +86,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_to_cart'])) {
     
   try {
     // Check if product already exists in cart
-    $stmt = $pdo->prepare("SELECT * FROM Cart WHERE buyer_id = ? AND product_id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM cart WHERE buyer_id = ? AND product_id = ?");
     $stmt->execute([$buyer_id, $product_id]);
     $existing_cart_item = $stmt->fetch();
         
     if ($existing_cart_item) {
       // Update quantity
       $new_quantity = $existing_cart_item['quantity'] + $quantity;
-      $stmt = $pdo->prepare("UPDATE Cart SET quantity = ? WHERE cart_id = ?");
+      $stmt = $pdo->prepare("UPDATE cart SET quantity = ? WHERE cart_id = ?");
       $stmt->execute([$new_quantity, $existing_cart_item['cart_id']]);
     } else {
       // Add new item to cart
-      $stmt = $pdo->prepare("INSERT INTO Cart (buyer_id, product_id, quantity) VALUES (?, ?, ?)");
+      $stmt = $pdo->prepare("INSERT INTO cart (buyer_id, product_id, quantity) VALUES (?, ?, ?)");
       $stmt->execute([$buyer_id, $product_id, $quantity]);
     }
     $success_message = "Product added to cart successfully!";
@@ -118,7 +118,7 @@ if (isset($_GET['error']) && $_GET['error'] === 'cod_payment_failed') {
 
 // Get cart count for the current user
 try {
-    $stmt = $pdo->prepare("SELECT COUNT(*) as cart_count FROM Cart WHERE buyer_id = ?");
+    $stmt = $pdo->prepare("SELECT COUNT(*) as cart_count FROM cart WHERE buyer_id = ?");
     $stmt->execute([getCurrentUserId()]);
     $cart_count = $stmt->fetch()['cart_count'];
 } catch (PDOException $e) {
