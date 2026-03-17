@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_cart_id'])) {
     $cart_id = intval($_POST['remove_cart_id']);
     $buyer_id = getCurrentUserId();
     try {
-        $stmt = $pdo->prepare('DELETE FROM Cart WHERE cart_id = ? AND buyer_id = ?');
+        $stmt = $pdo->prepare('DELETE FROM cart WHERE cart_id = ? AND buyer_id = ?');
         $stmt->execute([$cart_id, $buyer_id]);
     } catch (PDOException $e) {
         // Optionally handle error
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_cart_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_all_cart'])) {
     $buyer_id = getCurrentUserId();
     try {
-        $stmt = $pdo->prepare('DELETE FROM Cart WHERE buyer_id = ?');
+        $stmt = $pdo->prepare('DELETE FROM cart WHERE buyer_id = ?');
         $stmt->execute([$buyer_id]);
     } catch (PDOException $e) {
         // Optionally handle error
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_cart_id'], $_P
     $quantity = max(1, intval($_POST['update_quantity']));
     $buyer_id = getCurrentUserId();
     try {
-        $stmt = $pdo->prepare('UPDATE Cart SET quantity = ? WHERE cart_id = ? AND buyer_id = ?');
+        $stmt = $pdo->prepare('UPDATE cart SET quantity = ? WHERE cart_id = ? AND buyer_id = ?');
         $stmt->execute([$quantity, $cart_id, $buyer_id]);
     } catch (PDOException $e) {
         // Optionally handle error
@@ -47,7 +47,7 @@ try {
     $buyer_id = getCurrentUserId();
     $stmt = $pdo->prepare('
         SELECT c.cart_id, c.quantity, p.product_id, p.name, p.price, p.image_url, p.stock_quantity
-        FROM Cart c
+        FROM cart c
         JOIN products p ON c.product_id = p.product_id
         WHERE c.buyer_id = ?
     ');
