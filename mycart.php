@@ -2,6 +2,16 @@
 require_once 'config/session_check.php';
 require_once 'config/database.php';
 
+// Get cart count for the current user BEFORE including header
+$cart_count = 0;
+try {
+    $stmt = $pdo->prepare("SELECT COUNT(*) as cart_count FROM cart WHERE buyer_id = ?");
+    $stmt->execute([getCurrentUserId()]);
+    $cart_count = $stmt->fetch()['cart_count'];
+} catch (PDOException $e) {
+    $cart_count = 0;
+}
+
 // Handle remove cart item
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_cart_id'])) {
     $cart_id = intval($_POST['remove_cart_id']);
