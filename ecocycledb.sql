@@ -1,0 +1,1260 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Mar 17, 2026 at 01:04 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `ecocycledb`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admins`
+--
+
+CREATE TABLE `admins` (
+  `admin_id` int(11) NOT NULL,
+  `fullname` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('super_admin','admin') DEFAULT 'admin',
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`admin_id`, `fullname`, `username`, `email`, `phone_number`, `password`, `role`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'ECSD Head', 'ecsdhead', 'ecsdhead@gmail.com', '09488668013', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'super_admin', 'active', '2025-07-04 17:01:23', '2026-03-16 06:25:05');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_activity_logs`
+--
+
+CREATE TABLE `admin_activity_logs` (
+  `activity_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `action` varchar(100) NOT NULL,
+  `target_type` enum('user','product','order','category','setting','backup') NOT NULL,
+  `target_id` int(11) DEFAULT NULL,
+  `details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_alerts`
+--
+
+CREATE TABLE `admin_alerts` (
+  `id` int(11) NOT NULL,
+  `login_identifier` varchar(255) NOT NULL,
+  `user_type` varchar(50) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `fullname` varchar(255) DEFAULT NULL,
+  `table_name` varchar(50) NOT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `resolved` tinyint(4) DEFAULT 0,
+  `resolved_at` datetime DEFAULT NULL,
+  `notes` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin_alerts`
+--
+
+INSERT INTO `admin_alerts` (`id`, `login_identifier`, `user_type`, `email`, `fullname`, `table_name`, `ip_address`, `user_agent`, `created_at`, `resolved`, `resolved_at`, `notes`) VALUES
+(1, 'adiee', 'Seller', 'honeyboycorial64@gmail.com', 'Honey Boy Bucsit Corial', 'Sellers', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-01 18:08:57', 0, NULL, NULL),
+(2, 'adiee', 'Seller', 'honeyboycorial64@gmail.com', 'Honey Boy Bucsit Corial', 'Sellers', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-01 18:14:36', 0, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_dashboard_stats`
+--
+
+CREATE TABLE `admin_dashboard_stats` (
+  `stat_id` int(11) NOT NULL,
+  `stat_type` varchar(50) NOT NULL,
+  `stat_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `calculated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bard`
+--
+
+CREATE TABLE `bard` (
+  `bard_id` int(10) UNSIGNED NOT NULL,
+  `fullname` varchar(255) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bard`
+--
+
+INSERT INTO `bard` (`bard_id`, `fullname`, `username`, `email`, `password`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'BARD HEAD', 'bardhead', 'bardhead@ecocycle.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'active', '2025-07-04 09:01:23', '2025-07-04 09:01:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bardproducts`
+--
+
+CREATE TABLE `bardproducts` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ecocoins_cost` int(11) NOT NULL,
+  `stocks` int(11) NOT NULL DEFAULT 0,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bardproducts`
+--
+
+INSERT INTO `bardproducts` (`id`, `name`, `description`, `ecocoins_cost`, `stocks`, `image`, `created_at`, `updated_at`) VALUES
+(1, '1 Yellow Pad (80 leaves)', 'Made from recyclable paper, the yellow pad is perfect for notes, assignments, and everyday writing tasks. Durable and eco-friendly, it supports your studies while promoting sustainable choices.\r\nsize (8.5” x 11”)\r\n80 sheets of quality writing paper\r\nEco-friendly and recyclable\r\nIdeal for students and professionals', 100, 56, 'uploads/bard_products/bard_product_68c6e3a94d1d8.png', '2025-09-14 15:47:53', '2026-02-26 08:43:27'),
+(2, 'Flexstick Ballpen', 'Write with ease and confidence using the FlexStick Smooth Ink Pen! Designed for students and professionals, it delivers clean, consistent, and super smooth writing. Perfect for notes, assignments, and everyday use.', 40, 87, 'uploads/bard_products/bard_product_68c6e5f726af1.jpg', '2025-09-14 15:57:43', '2026-02-26 08:43:19'),
+(3, 'Journal Notebook', 'Stay organized and inspired with our Journal Notebook — perfect for students, professionals, and creatives! Whether you’re jotting down daily thoughts, class notes, or big ideas, this notebook is designed to keep your writing neat and stylish.\r\nPerfect Gift Idea: Ideal for students, writers, or anyone who loves stationery!', 80, 29, 'uploads/bard_products/bard_product_690a8146ec264.jpg', '2025-11-04 22:42:14', '2026-02-26 08:43:07'),
+(4, 'DMMMSU ID LACE', 'The New Designed ID Lace of Dmmmsu', 85, 60, 'uploads/bard_products/bard_product_6914ef286b6ee.jpg', '2025-11-12 20:33:44', '2026-02-26 08:42:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bardproductsredeem`
+--
+
+CREATE TABLE `bardproductsredeem` (
+  `redeem_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_type` enum('buyer','seller') NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `ecocoins_spent` int(11) NOT NULL,
+  `status` enum('pending','approved','declined','completed') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `cost` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `order_id` varchar(50) NOT NULL,
+  `redeemed_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bardproductsredeem`
+--
+
+INSERT INTO `bardproductsredeem` (`redeem_id`, `user_id`, `user_type`, `product_id`, `quantity`, `ecocoins_spent`, `status`, `created_at`, `updated_at`, `cost`, `order_id`, `redeemed_at`) VALUES
+(1, 1, 'buyer', 1, 1, 10000, '', '2025-09-25 03:08:19', '2025-09-25 03:42:01', 10000.00, '6PRPCQ6R', '2025-09-25 11:08:19'),
+(2, 1, 'buyer', 2, 1, 7000, 'approved', '2025-09-25 03:46:10', '2025-09-25 03:46:36', 7000.00, '0IYK3VCQ', '2025-09-25 11:46:10'),
+(3, 2, 'buyer', 2, 1, 7000, 'approved', '2026-02-04 00:56:49', '2026-02-04 00:57:17', 7000.00, '994QEB7E', '2026-02-04 08:56:49'),
+(4, 22, 'buyer', 4, 1, 8500, 'approved', '2026-02-05 23:43:01', '2026-02-05 23:43:38', 8500.00, 'QPBRRNFG', '2026-02-06 07:43:01'),
+(5, 2, 'buyer', 3, 1, 80000, 'approved', '2026-02-09 10:53:46', '2026-02-09 12:22:11', 80000.00, 'O20T7IC6', '2026-02-09 18:53:46'),
+(6, 2, 'buyer', 2, 1, 7000, 'approved', '2026-02-09 12:21:38', '2026-02-09 12:22:18', 7000.00, 'PJLNC7UZ', '2026-02-09 20:21:38'),
+(7, 2, 'buyer', 4, 1, 8500, '', '2026-02-09 12:21:42', '2026-02-09 12:22:13', 8500.00, 'M27IO9G2', '2026-02-09 20:21:42'),
+(8, 2, 'buyer', 1, 1, 10000, '', '2026-02-09 12:21:45', '2026-02-09 12:22:20', 10000.00, '4KW6OAZJ', '2026-02-09 20:21:45'),
+(9, 2, 'buyer', 2, 1, 7000, '', '2026-02-09 12:21:48', '2026-02-09 12:22:16', 7000.00, 'EC4RF7DI', '2026-02-09 20:21:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `buyers`
+--
+
+CREATE TABLE `buyers` (
+  `buyer_id` int(11) NOT NULL,
+  `fullname` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `phone_number` varchar(20) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `address` text DEFAULT NULL,
+  `documents` varchar(255) DEFAULT NULL,
+  `status` enum('active','blocked') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `last_login` datetime DEFAULT NULL,
+  `ecocoins_balance` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `reset_token` varchar(255) DEFAULT NULL,
+  `reset_token_expires` datetime DEFAULT NULL,
+  `reset_required` tinyint(1) DEFAULT 0,
+  `failed_attempts` int(11) DEFAULT 0,
+  `last_failed_attempt` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `buyers`
+--
+
+INSERT INTO `buyers` (`buyer_id`, `fullname`, `username`, `phone_number`, `email`, `password`, `address`, `documents`, `status`, `created_at`, `updated_at`, `last_login`, `ecocoins_balance`, `reset_token`, `reset_token_expires`, `reset_required`, `failed_attempts`, `last_failed_attempt`) VALUES
+(1, 'Honey Boy Corial', 'hbcorial', '09771279262', 'honeyboycorial64@gmail.com', '$2y$10$fB5vT6gNwvrp4B9w6MvoTeJ9DIboeVFhnOBksas5tmHQgq2UBZfee', 'Bitalag, Bacnotan, La Union', '[\"hb_1757858646_0.docx\"]', 'active', '2025-09-14 14:04:06', '2026-02-04 00:50:32', '2026-02-04 08:50:32', 0.00, NULL, NULL, 0, 0, NULL),
+(2, 'Raynan B. Corial', 'rinanzyy', '09708152859', 'aldwinittyb.corial@gmail.com', '$2y$10$xYvDuRyEdht/yzgwcBow9.Ut5Vp0S7QJoav282vAiMC3qIovxh7Ua', 'Bitalag Bacnotan, La Union', '[\"rinanzyy_1757858934_0.jpg\"]', 'active', '2025-09-14 14:08:54', '2026-03-16 23:59:11', '2026-03-17 07:59:11', -19473.38, NULL, NULL, 0, 0, NULL),
+(3, 'Racy Corial', 'racyb', '09632679342', 'racycorial@gmail.com', '$2y$10$5Bibejk0LLDHFYUnyoXLt.aV5F1jCCmlAx5mH.q37d0BAHwQ0cWu6', 'Bitalag, Bacnotan, La Union', '[\"racyb_1757859542_0.jpg\"]', 'active', '2025-09-14 14:19:02', '2026-02-04 09:18:32', '2026-02-04 17:18:32', 2.45, NULL, NULL, 0, 0, NULL),
+(4, 'Julliana Aiah Palle', 'aiaah', '09632679349', 'juliana@gmail.com', '$2y$10$3GHYxktVs.Idw3lzwMicjev/.f7CfKQDdDICmbdKLUTrBoWQSGcZK', 'Sta Lucia, Ilocos Sur', '[\"aiaah_1757859817_0.jpg\"]', 'active', '2025-09-14 14:23:37', '2025-09-14 14:23:37', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(5, 'Joehna Faye Ortega', 'fayee', '09489368017', 'joehnafaye11@gmail.com', '$2y$10$MqM2i913wHy4f.nov28S8OzM7GPy8vlhmVSbMI0/smdGIfublMOyu', 'Paringao, Bauang La Union', '[\"fayee_1757860021_0.jpg\"]', 'active', '2025-09-14 14:27:01', '2025-09-14 14:27:01', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(6, 'Joehlia Faith Ortega', 'jhl.fth', '09635679094', 'joehliafaithortega@gmail.com', '$2y$10$Af17GpDraapuus8vIQCk9OfJ6KJHf6yMytXfGOrctNf/8StScsgCS', 'Paringao, Bauang La Union', '[\"jhlfth_1757860190_0.jpg\"]', 'active', '2025-09-14 14:29:50', '2026-03-16 05:53:49', '2026-03-16 10:03:20', 219.45, NULL, NULL, 0, 0, NULL),
+(7, 'Jaypee', 'Japong', '09457826481', 'jaypeenarnola@icloud.com', '$2y$10$GIkOH0gQAsypBPQE8TTKluok97vBJZ/pP4bYRq2PkM3D6DrjnwXsK', 'Pandan, Bacnotan, La Union', '[\"japong_1757895124_0.jpg\"]', 'active', '2025-09-15 00:12:04', '2025-09-15 00:16:36', '2025-09-15 08:16:36', 0.00, NULL, NULL, 0, 0, NULL),
+(8, 'Marc Sonwright D. Cachero', 'Macky', '09390828608', 'cmarcsonwright@gmail.com', '$2y$10$RZJ2cK7igg83RsYQewIc.elFYS4JQES6/635slZPbzcZAjgk5d11q', 'Upper Tumapoc Burgos, La Uinon', '[\"macky_1759195164_0.pdf\"]', 'active', '2025-09-30 01:19:24', '2025-09-30 01:19:52', '2025-09-30 09:19:52', 0.00, NULL, NULL, 0, 0, NULL),
+(9, 'Abner', 'Abnerviernes', '09457826000', 'abner@gmail.com', '$2y$10$RtEsdvVnDrE9r2jH31/woeWuIsA0xCbUVGeknb7K9T4LRFVAUlR/S', 'Cabaroan, Bacnotan, La Union', '[\"abnerviernes_1760420121_0.png\"]', 'active', '2025-10-14 05:35:22', '2025-10-14 05:36:40', '2025-10-14 13:36:40', 0.00, NULL, NULL, 0, 0, NULL),
+(10, 'SITE', 'site', '09635679094', 'site@dmmmsu.edu.ph', '$2y$10$6iXhR9Q.lRqhCjXkW0UAS.qDGwjJNHA9DxVYm4LFVDjnG4UKOphxa', 'Cabaroan, Bacnotan, La Union', '[\"site_1760444624_0.docx\"]', '', '2025-10-14 12:23:45', '2025-10-14 12:23:45', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(11, '17s', '17sculture', '09390828123', '17sculture@ph.org', '$2y$10$nk/tDlhJLenYQQarOgMaQeYouQNu3xVKDOjL4c.07TZGqrLkG8gH6', 'Sta Lucia, Ilocos Sur', '[\"17s_1760445122_0.png\"]', '', '2025-10-14 12:32:02', '2025-10-14 12:32:02', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(14, 'Vench Axel Ross Gliam', 'Vench01', '09686041649', 'axellexa122@gmail.com', '$2y$10$31kL2ZrK0ygzLVUEc8VrBuxewSQ7nQnSgMCh7xjIxl5aDkYvL1P1C', 'Baroro, Bacnotan, La Union', '[\"vench01_1762310657_0.jpg\"]', 'active', '2025-11-05 02:44:17', '2025-11-05 02:53:09', '2025-11-05 10:53:09', 1.55, NULL, NULL, 0, 0, NULL),
+(15, 'YES', 'yes', '09708152859', 'yes@gmail.org', '$2y$10$YIwjX/sH/JX6O8e3ZK2AAeKdNQGMuxpbfHdwGvcesP0koOIsGvyHW', 'Sapilang, Bacnotan, La Union', '[\"yes_1762408716_0.pdf\"]', '', '2025-11-06 05:58:37', '2026-02-01 13:08:23', NULL, 0.00, '911df13201fe1fcfcddcdb562b82c304631f8e0c3b6add550e68297b73f5c2ee', '2026-02-01 14:08:23', 1, 0, NULL),
+(17, 'Jellah Freign Ortiza', 'JELLAHTINES', '09771277645', 'jellahfreignortiza@gmail.com', '$2y$10$FAOzChEye4gNdkCOVzlctepPbaG8r6kG9cv3ESySBf6REuou65tai', 'Quinavite, Bauang, La Union', '[\"jellahtines_1770036379_0.png\"]', 'active', '2026-02-02 12:46:19', '2026-02-02 12:58:02', '2026-02-02 20:58:02', 1.25, NULL, NULL, 0, 0, NULL),
+(18, 'Shasney Alminiana', 'shanangputt', '09638679342', 'alminianashasney@gmail.com', '$2y$10$jEue0gTy2PVB8D0HSDL.4.BOHyWQ5klTLAwZVsErPoiBpZcRzr/XW', 'Balaoan, La Union', '[\"shanangputt_1770121221_0.png\"]', 'active', '2026-02-03 12:20:22', '2026-02-03 12:22:32', NULL, 0.00, 'b0f5f4603ba0780759ff601bdfdbad3f48932aebe39782c416071e2085ef9e74', '2026-02-03 14:22:32', 1, 0, NULL),
+(19, 'Roxanne Ferrer', 'roxxyyy', '09481277645', 'ferrer02042002@gmail.com', '$2y$10$Ixq.A1/oGZIm0lZJEXapxem2YW/3diixPkVdO2/h0qbCaqCu.SGga', 'Pa-o, Balaoan, La Union', '[\"roxxyyy_1770121892_0.jpeg\"]', 'active', '2026-02-03 12:31:32', '2026-03-16 06:50:47', '2026-03-16 08:34:06', 36.94, NULL, NULL, 0, 0, NULL),
+(20, 'SRDI MARKETING', 'msesrdi', '09468354393', 'mse.srdi@dmmmsu.edu.ph', '$2y$10$Em5gB4FuEKlDuZ/SbkQ7.edikYiFD1GVIWkiiqYgIMomtNPw9kEOG', 'Sapilang, Bacnotan, La Union', '[\"srdimarketing_1770173054_0.docx\"]', '', '2026-02-04 02:44:14', '2026-02-27 00:40:21', '2026-02-27 08:40:21', 0.00, NULL, NULL, 0, 0, NULL),
+(24, 'This Testdasystem', 'test', '09885432515', 'dibildebugger@gmail.com', '$2y$10$Ij2nk1bpH1ormObHACbVIugVU3Anm1V5CfLZtfLJddBZLeayyIx3u', 'Mangaan, Santol, La Union', NULL, 'active', '2026-02-06 13:53:46', '2026-02-06 13:53:46', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(25, 'Baniely Munoz Pajarit', 'banilayy', '09468358962', 'banielympajarit11@gmail.com', '$2y$10$mkVc7EDUEtDXkunGCjFgP.RqBxKjU4TNghhwX2E6Tp6KR7tgSfwtC', 'Sta Rita Bacnotan, La Union', NULL, 'active', '2026-02-06 14:05:03', '2026-02-06 14:05:03', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(26, 'Jun Debugging', 'jundebugging06', '09635679094', 'jundebugging@gmail.com', '$2y$10$29qnPZiF/YhiSRQjm6ugu.B2uLQL0OlAnXmQAXfsj2EjGK9TX1C7y', 'Bitalag, Bacnotan, La Union', NULL, 'active', '2026-02-07 23:08:26', '2026-02-08 10:10:36', NULL, 0.00, '6c109573f9f66c5c4dc79d1e4db60c26f634a1e11247c8beffcc33de0e9050d1', '2026-02-08 12:10:36', 1, 0, NULL),
+(27, 'Aldwin Corial', 'dbjdebugging0001', '09635671111', 'aldwinb.corial@gmail.com', '$2y$10$kwLAUt1OMvtBgQxWq.Ol7OqjKth2AHd8PwW0A0NNjBqk36ZbIqrF6', 'Cabaroan, Bacnotan, La Union', NULL, 'active', '2026-02-07 23:21:16', '2026-02-07 23:21:46', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(33, 'Kylie', 'Ustari', '09052112287', 'kyliel.ustari@student.dmmmsu.edu.ph', '$2y$10$C3WDWEFravojAaY4gG0qB.z94wZkIsPIDlsps5Klj6KM3Yre7zh06', 'San Juan, La Union', NULL, 'active', '2026-02-10 01:21:48', '2026-02-10 01:21:48', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(35, 'Jairuh Cariaso', 'jaiiii', '09632679390', 'jaicariaso@gmail.com', '$2y$10$5CRd7wEXUQDIDHWUdH207.ZknzLzwQBNqH2WydxfnIdDnst3hazXi', 'Guinabang, Bacnotan, La Union', NULL, 'active', '2026-02-13 09:30:36', '2026-02-13 09:30:36', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(36, 'Honey Boy Bucsit Corial', 'adiee', '09771279262', 'honeyboyb.corial@gmail.com', '$2y$10$4sRNBcoS72l9FYtByFtQ/eURdAj8s.EQjbHKausARWNaz3tTO2/NC', 'Bitalag Bacnotan, La Union', NULL, 'active', '2026-03-03 06:14:51', '2026-03-16 00:12:28', '2026-03-16 08:12:28', 37.77, NULL, NULL, 0, 0, NULL),
+(38, 'Cris Allen Causgay', 'crisallen2', '09457488557', 'casugaycrisallenm.18@gmail.com', '$2y$10$yBeB4yk.j3985VzcHqf.0eorYgyP7pPSLCAS5V99ezJX07ggY1h0S', 'Cabugao, Bacnotan, La Union', NULL, 'active', '2026-03-03 23:48:00', '2026-03-03 23:48:00', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(39, 'Donald Trump', 'dtrump', '09771279263', 'skupsch@dmmmsu.edu.ph', '$2y$10$z/0CeGZhwB//o.YT0hGWTOt9WhwDt/l5ybVAkDs3AbscShSk.LRbK', 'Bitalag, Bacnotan, La Union', NULL, 'active', '2026-03-04 01:57:20', '2026-03-16 07:22:42', '2026-03-16 14:38:18', 209.05, NULL, NULL, 0, 0, NULL),
+(40, 'Giyana Bugaoto', 'giyana7', '09481279677', 'debuggo758@gmail.com', '$2y$10$OcB112wOIkol.91DRzHyzum/UxOP5cgUVneaXygVa0ugXRD08B0nO', 'Sta Lucia, Ilocos Sur', NULL, 'active', '2026-03-08 21:49:47', '2026-03-08 21:49:47', NULL, 0.00, NULL, NULL, 0, 0, NULL),
+(41, 'Nathaniel Ragmac', 'Nragmac11', '09318279272', 'tantanragmac74@gmail.com', '$2y$10$3g5I6flv.F2R.JasUQm3WuIfmwt89UGXcyK9Ftdp889by/zQTbAiO', 'Ortega Bacnotan, La Union', NULL, 'active', '2026-03-16 00:37:41', '2026-03-16 01:25:45', '2026-03-16 09:25:45', 0.00, NULL, NULL, 0, 0, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `cart_id` int(11) NOT NULL,
+  `buyer_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cart_id`, `buyer_id`, `product_id`, `quantity`, `created_at`) VALUES
+(45, 2, 4, 1, '2026-03-16 06:22:03');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `category_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`category_id`, `name`, `description`, `created_at`) VALUES
+(1, 'Greenchoice', 'Products selected for their green impact', '2025-07-04 17:01:23'),
+(2, 'Best Seller', 'Top selling eco products', '2025-07-04 17:01:23'),
+(3, 'No Label', 'Products without special labels', '2025-07-04 09:01:23'),
+(4, 'Organic', 'Items sourced from certified organic materials', '2025-10-14 04:00:00'),
+(5, 'Food', 'Edible goods and sustainable pantry items', '2025-10-14 04:00:00'),
+(6, 'Eco Friendly', 'Broad range of eco-conscious lifestyle products', '2025-10-14 04:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ecocoins_transactions`
+--
+
+CREATE TABLE `ecocoins_transactions` (
+  `transaction_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_type` enum('buyer','seller') NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `transaction_type` enum('earn','spend','transfer','adjustment') NOT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ecocoins_transactions`
+--
+
+INSERT INTO `ecocoins_transactions` (`transaction_id`, `user_id`, `user_type`, `amount`, `transaction_type`, `description`, `created_at`) VALUES
+(1, 3, 'buyer', 1.20, '', 'EcoCoins awarded for Order #2', '2025-10-24 03:02:43'),
+(2, 2, 'buyer', 1.25, '', 'EcoCoins awarded for Order #4', '2025-10-29 00:55:06'),
+(3, 14, 'buyer', 0.30, '', 'EcoCoins awarded for Order #6', '2025-11-05 02:51:02'),
+(4, 19, 'buyer', -18.10, 'spend', 'Payment for Order #23', '2026-02-12 05:17:48'),
+(5, 1, 'seller', 4.99, 'earn', 'Sale completed for Order', '2026-02-27 00:25:19'),
+(6, 1, 'seller', 4.99, 'earn', 'Sale completed for Order', '2026-02-27 00:25:31'),
+(7, 9, 'seller', 2.75, 'earn', 'Sale completed for Order', '2026-02-27 00:40:51'),
+(8, 2, 'seller', 37.16, 'earn', 'Sale completed for Order', '2026-03-13 03:18:06'),
+(9, 2, 'seller', 21.00, 'earn', 'Sale completed for Order', '2026-03-13 03:18:12'),
+(10, 9, 'seller', 20.25, 'earn', 'Sale completed for Order', '2026-03-13 03:26:13'),
+(11, 6, 'buyer', 1.25, '', 'EcoCoins awarded for Order #65', '2026-03-16 05:47:58'),
+(12, 6, 'buyer', 12.00, '', 'EcoCoins awarded for Order #66', '2026-03-16 05:51:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `login_attempts`
+--
+
+CREATE TABLE `login_attempts` (
+  `id` int(11) NOT NULL,
+  `login_identifier` varchar(255) NOT NULL,
+  `attempt_time` timestamp NULL DEFAULT current_timestamp(),
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `login_attempts`
+--
+
+INSERT INTO `login_attempts` (`id`, `login_identifier`, `attempt_time`, `ip_address`, `user_agent`) VALUES
+(11, 'yes', '2026-02-01 13:06:43', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(12, 'yes', '2026-02-01 13:06:45', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(13, 'yes', '2026-02-01 13:06:49', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(14, 'yes', '2026-02-01 13:06:56', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(15, 'yes', '2026-02-01 13:07:07', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(32, 'ban', '2026-02-01 13:36:48', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(38, 'ECSD HEAD', '2026-02-01 13:46:11', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(88, 'alminianashasney@gmail.com', '2026-02-03 12:20:53', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(89, 'alminianashasney@gmail.com', '2026-02-03 12:20:55', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(90, 'alminianashasney@gmail.com', '2026-02-03 12:20:57', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(91, 'alminianashasney@gmail.com', '2026-02-03 12:21:00', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(92, 'alminianashasney@gmail.com', '2026-02-03 12:21:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(93, 'roxxyy', '2026-02-03 12:36:42', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'),
+(125, 'kyliel.ustari@student.dmmmsu.edu.ph', '2026-03-03 00:49:34', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'),
+(126, 'kyliel.ustari@student.dmmmsu.edu.ph', '2026-03-03 00:50:04', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'),
+(127, 'kyliel.ustari@student.dmmmsu.edu.ph', '2026-03-03 00:50:25', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'),
+(128, 'kyliel.ustari@student.dmmmsu.edu.ph', '2026-03-03 00:50:25', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'),
+(136, 'roxyy', '2026-03-16 06:49:38', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'),
+(137, 'roxyy', '2026-03-16 06:49:42', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'),
+(138, 'roxyy', '2026-03-16 06:49:53', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `message_id` int(11) NOT NULL,
+  `buyer_id` int(11) NOT NULL,
+  `admin_id` int(11) DEFAULT NULL,
+  `sender_type` enum('buyer','admin') NOT NULL,
+  `message_text` text NOT NULL,
+  `feedback_text` text DEFAULT NULL,
+  `status` enum('sent','received','replied','archived') DEFAULT 'sent',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`message_id`, `buyer_id`, `admin_id`, `sender_type`, `message_text`, `feedback_text`, `status`, `created_at`, `updated_at`) VALUES
+(1, 17, NULL, 'buyer', 'Good EVening', NULL, '', '2026-02-02 12:58:37', '2026-02-02 12:58:37'),
+(2, 2, NULL, 'buyer', 'aray ko', NULL, '', '2026-02-08 09:31:05', '2026-02-08 09:31:05'),
+(3, 2, NULL, 'buyer', 'di ko na to', NULL, '', '2026-02-08 09:33:04', '2026-02-08 09:33:04'),
+(4, 0, NULL, 'buyer', 'Contact Form Submission\n\nName: Honey Boy B. Corial\nEmail: honeyboycorial64@gmail.com\nUser Type: Buyer\nIssue Type: Account locked\nUrgency: Medium\n\nMessage:\nklbkjlbjlkbklj', NULL, 'sent', '2026-03-03 04:57:55', '2026-03-03 04:57:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_type` varchar(20) NOT NULL DEFAULT 'buyer',
+  `order_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `product_name` varchar(255) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  `type` varchar(20) DEFAULT 'order',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `amount` decimal(10,2) DEFAULT NULL,
+  `read_status` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user_id`, `user_type`, `order_id`, `product_id`, `product_name`, `status`, `type`, `created_at`, `amount`, `read_status`) VALUES
+(1, 2, 'buyer', 21, 1, 'Lucas Papaw Ointment', 'shipped', 'order', '2026-02-09 20:16:42', NULL, 1),
+(2, 2, 'buyer', 21, 1, 'Lucas Papaw Ointment', 'delivered', 'order', '2026-02-09 20:35:34', NULL, 1),
+(3, 19, 'buyer', 23, 2, 'Moreishi Herbal Cream 10 g', 'shipped', 'order', '2026-02-12 13:18:20', NULL, 1),
+(4, 19, 'buyer', 23, 2, 'Moreishi Herbal Cream 10 g', 'delivered', 'order', '2026-02-13 10:38:37', NULL, 1),
+(5, 14, 'buyer', 6, 17, 'MDew Parol', 'delivered', 'order', '2026-02-13 10:39:02', NULL, 0),
+(6, 19, 'buyer', 19, 1, 'Lucas Papaw Ointment', 'shipped', 'order', '2026-02-27 08:25:13', NULL, 1),
+(7, 1, 'seller', 19, 1, 'Lucas Papaw Ointment', 'ecocoin', 'ecocoin', '2026-02-27 08:25:19', 4.99, 1),
+(8, 19, 'buyer', 19, 1, 'Lucas Papaw Ointment', 'delivered', 'order', '2026-02-27 08:25:19', NULL, 1),
+(9, 2, 'buyer', 16, 1, 'Lucas Papaw Ointment', 'shipped', 'order', '2026-02-27 08:25:26', NULL, 1),
+(10, 1, 'seller', 16, 1, 'Lucas Papaw Ointment', 'ecocoin', 'ecocoin', '2026-02-27 08:25:31', 4.99, 1),
+(11, 2, 'buyer', 16, 1, 'Lucas Papaw Ointment', 'delivered', 'order', '2026-02-27 08:25:31', NULL, 1),
+(12, 19, 'buyer', 24, 25, 'Handmade Ribbon Flower Hanging Tassels', 'shipped', 'order', '2026-02-27 08:40:35', NULL, 1),
+(13, 19, 'buyer', 24, 28, 'Handcrafted Cocoon SIlk Rose', 'shipped', 'order', '2026-02-27 08:40:40', NULL, 1),
+(14, 9, 'seller', 24, 25, 'Handmade Ribbon Flower Hanging Tassels', 'ecocoin', 'ecocoin', '2026-02-27 08:40:51', 2.75, 0),
+(15, 19, 'buyer', 24, 25, 'Handmade Ribbon Flower Hanging Tassels', 'delivered', 'order', '2026-02-27 08:40:51', NULL, 1),
+(16, 39, 'buyer', 26, 5, 'Recycled Sari Bag', 'shipped', 'order', '2026-03-04 10:23:35', NULL, 1),
+(17, 1, 'seller', NULL, 41, 'awdaw', 'approved', 'approval', '2026-03-08 19:18:33', NULL, 1),
+(18, 1, 'seller', 27, 2, 'Moreishi Herbal Cream 10 g', 'pending', 'order', '2026-03-08 19:21:07', NULL, 1),
+(19, 1, 'seller', 28, 2, 'Moreishi Herbal Cream 10 g', 'pending', 'order', '2026-03-09 06:00:10', NULL, 1),
+(20, 14, 'seller', NULL, 0, 'DSFDS', 'approved', 'approval', '2026-03-09 08:10:00', NULL, 1),
+(21, 1, 'seller', NULL, 0, 'zxvzxzx', 'approved', 'approval', '2026-03-09 21:17:50', NULL, 1),
+(22, 2, 'seller', 29, 8, 'Ruffle Edge Recycled Glass Clear Vase', 'pending', 'order', '2026-03-13 11:17:16', NULL, 1),
+(23, 2, 'buyer', 7, 12, 'Eco-Style Succulent Plants', 'shipped', 'order', '2026-03-13 11:17:59', NULL, 1),
+(24, 2, 'seller', 18, 6, 'Recycled Nylon Crossbody Bag', 'ecocoin', 'ecocoin', '2026-03-13 11:18:06', 37.16, 1),
+(25, 19, 'buyer', 18, 6, 'Recycled Nylon Crossbody Bag', 'delivered', 'order', '2026-03-13 11:18:06', NULL, 1),
+(26, 2, 'seller', 26, 5, 'Recycled Sari Bag', 'ecocoin', 'ecocoin', '2026-03-13 11:18:12', 21.00, 1),
+(27, 36, 'buyer', 26, 5, 'Recycled Sari Bag', 'delivered', 'order', '2026-03-13 11:18:12', NULL, 1),
+(28, 1, 'seller', 30, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-13 11:19:24', NULL, 1),
+(29, 1, 'seller', 31, 2, 'Moreishi Herbal Cream 10 g', 'pending', 'order', '2026-03-13 11:22:54', NULL, 1),
+(30, 36, 'buyer', 31, 2, 'Moreishi Herbal Cream 10 g', 'shipped', 'order', '2026-03-13 11:23:09', NULL, 1),
+(31, 9, 'seller', 24, 28, 'Handcrafted Cocoon SIlk Rose', 'ecocoin', 'ecocoin', '2026-03-13 11:26:13', 20.25, 0),
+(34, 15, 'seller', NULL, 0, 'Honey Jam', 'approved', 'approval', '2026-03-16 08:42:24', NULL, 1),
+(40, 2, 'seller', 34, 5, 'Recycled Sari Bag', 'pending', 'order', '2026-03-16 10:17:02', NULL, 1),
+(41, 2, 'seller', 35, 5, 'Recycled Sari Bag', 'pending', 'order', '2026-03-16 10:17:32', NULL, 1),
+(42, 6, 'buyer', 35, 5, 'Recycled Sari Bag', 'shipped', 'order', '2026-03-16 10:18:25', NULL, 1),
+(43, 1, 'seller', 37, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-16 10:41:34', NULL, 1),
+(44, 2, 'seller', 39, 12, 'Eco-Style Succulent Plants', 'pending', 'order', '2026-03-16 10:42:53', NULL, 0),
+(45, 2, 'seller', 40, 12, 'Eco-Style Succulent Plants', 'pending', 'order', '2026-03-16 10:45:31', NULL, 0),
+(46, 1, 'seller', 43, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-16 10:48:33', NULL, 1),
+(47, 1, 'seller', 45, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-16 10:52:28', NULL, 1),
+(48, 1, 'seller', 46, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-16 10:52:43', NULL, 1),
+(49, 1, 'seller', 47, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-16 10:58:57', NULL, 1),
+(50, 1, 'seller', 48, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-16 11:00:58', NULL, 1),
+(51, 2, 'seller', 49, 5, 'Recycled Sari Bag', 'pending', 'order', '2026-03-16 11:03:41', NULL, 0),
+(52, 1, 'seller', 50, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-16 11:06:55', NULL, 1),
+(53, 1, 'seller', 52, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-16 13:07:42', NULL, 1),
+(54, 9, 'seller', 53, 31, 'Silk Cocoon Tulips', 'pending', 'order', '2026-03-16 13:21:06', NULL, 0),
+(55, 9, 'seller', 54, 31, 'Silk Cocoon Tulips', 'pending', 'order', '2026-03-16 13:23:32', NULL, 0),
+(56, 9, 'seller', 55, 31, 'Silk Cocoon Tulips', 'pending', 'order', '2026-03-16 13:25:17', NULL, 0),
+(57, 9, 'seller', 56, 27, 'Handcrafted Floral Award Pins & Rosettes Set Parents and Completer', 'pending', 'order', '2026-03-16 13:27:35', NULL, 0),
+(58, 2, 'seller', 57, 5, 'Recycled Sari Bag', 'pending', 'order', '2026-03-16 13:32:56', NULL, 0),
+(59, 2, 'seller', 58, 5, 'Recycled Sari Bag', 'pending', 'order', '2026-03-16 13:35:11', NULL, 0),
+(60, 9, 'seller', 59, 31, 'Silk Cocoon Tulips', 'pending', 'order', '2026-03-16 13:38:17', NULL, 0),
+(61, 9, 'seller', 60, 31, 'Silk Cocoon Tulips', 'pending', 'order', '2026-03-16 13:41:52', NULL, 0),
+(62, 9, 'seller', 61, 31, 'Silk Cocoon Tulips', 'pending', 'order', '2026-03-16 13:43:18', NULL, 0),
+(63, 1, 'seller', 62, 2, 'Moreishi Herbal Cream 10 g', 'pending', 'order', '2026-03-16 13:46:41', NULL, 1),
+(64, 1, 'seller', 63, 2, 'Moreishi Herbal Cream 10 g', 'pending', 'order', '2026-03-16 13:47:09', NULL, 1),
+(65, 1, 'seller', 64, 7, 'Recycled Water Bottled', 'pending', 'order', '2026-03-16 13:47:31', NULL, 1),
+(66, 9, 'seller', 67, 31, 'Silk Cocoon Tulips', 'pending', 'order', '2026-03-16 13:53:49', NULL, 0),
+(67, 6, 'buyer', 67, 31, 'Silk Cocoon Tulips', 'shipped', 'order', '2026-03-16 13:55:54', NULL, 0),
+(68, 1, 'seller', 68, 4, 'Comfort Balm 10 g', 'pending', 'order', '2026-03-16 14:02:00', NULL, 1),
+(69, 1, 'seller', 69, 2, 'Moreishi Herbal Cream 10 g', 'pending', 'order', '2026-03-16 14:05:37', NULL, 1),
+(70, 2, 'seller', 70, 5, 'Recycled Sari Bag', 'pending', 'order', '2026-03-16 14:07:15', NULL, 0),
+(71, 15, 'seller', 71, 32, 'Honey Jam', 'pending', 'order', '2026-03-16 14:50:47', NULL, 1),
+(72, 15, 'seller', 72, 32, 'Honey Jam', 'pending', 'order', '2026-03-16 15:21:31', NULL, 0),
+(73, 2, 'seller', 73, 5, 'Recycled Sari Bag', 'pending', 'order', '2026-03-16 15:22:01', NULL, 0),
+(74, 2, 'seller', 74, 6, 'Recycled Nylon Crossbody Bag', 'pending', 'order', '2026-03-16 15:22:42', NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `buyer_id` int(11) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `status` enum('pending','confirmed','shipped','delivered','cancelled') DEFAULT 'pending',
+  `shipping_address` text NOT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `delivery_method` varchar(20) DEFAULT 'delivery',
+  `tracking_number` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `buyer_id`, `total_amount`, `status`, `shipping_address`, `payment_method`, `delivery_method`, `tracking_number`, `created_at`, `updated_at`) VALUES
+(1, 2, 334.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-10-24 02:10:23', '2025-10-24 02:10:23'),
+(2, 3, 176.00, 'pending', 'Bitalag, Bacnotan, La Union', 'gcash', 'delivery', NULL, '2025-10-24 03:02:43', '2025-10-24 03:02:43'),
+(3, 2, 176.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-10-24 03:18:10', '2025-10-24 03:18:10'),
+(4, 2, 181.00, 'pending', 'Bitalag Bacnotan, La Union', 'gcash', 'delivery', NULL, '2025-10-29 00:55:06', '2025-10-29 00:55:06'),
+(5, 14, 181.00, 'pending', 'Baroro, Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-11-05 02:45:19', '2025-11-05 02:45:19'),
+(6, 14, 82.00, 'pending', 'Baroro, Bacnotan, La Union', 'gcash', 'delivery', NULL, '2025-11-05 02:51:02', '2025-11-05 02:51:02'),
+(7, 2, 208.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-11-06 06:28:11', '2025-11-06 06:28:11'),
+(8, 3, 181.00, 'pending', 'Bitalag, Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-11-06 12:17:05', '2025-11-06 12:17:05'),
+(9, 2, 208.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-11-07 13:35:10', '2025-11-07 13:35:10'),
+(10, 2, 213.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-11-13 01:20:52', '2025-11-13 01:20:52'),
+(11, 2, 208.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-11-13 01:58:25', '2025-11-13 01:58:25'),
+(12, 2, 574.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-11-19 12:13:08', '2025-11-19 12:13:08'),
+(13, 6, 208.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2025-11-21 06:44:09', '2025-11-21 06:44:09'),
+(14, 6, 181.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2025-11-21 07:18:30', '2025-11-21 07:18:30'),
+(15, 6, 208.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2025-11-21 07:57:44', '2025-11-21 07:57:44'),
+(16, 2, 574.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2025-11-24 08:44:22', '2025-11-24 08:44:22'),
+(17, 17, 181.00, 'pending', 'Quinavite, Bauang, La Union', 'cod', 'delivery', NULL, '2026-02-02 12:47:21', '2026-02-02 12:47:21'),
+(18, 19, 1851.52, 'pending', 'Pa-o, Balaoan, La Union', 'cod', 'delivery', NULL, '2026-02-03 12:33:22', '2026-02-03 12:33:22'),
+(19, 19, 574.00, 'pending', 'Pa-o, Balaoan, La Union', 'cod', 'delivery', NULL, '2026-02-05 01:26:17', '2026-02-05 01:26:17'),
+(21, 2, 574.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2026-02-08 07:47:38', '2026-02-08 07:47:38'),
+(22, 19, 169.76, 'pending', 'Pa-o, Balaoan, La Union', 'cod', 'delivery', NULL, '2026-02-12 05:17:21', '2026-02-12 05:17:21'),
+(23, 19, 181.00, 'pending', 'Pa-o, Balaoan, La Union', 'ecocoins', 'delivery', NULL, '2026-02-12 05:17:47', '2026-02-12 05:17:47'),
+(24, 19, 365.00, 'pending', 'Pa-o, Balaoan, La Union', 'cod', 'delivery', NULL, '2026-02-27 00:39:35', '2026-02-27 00:39:35'),
+(25, 6, 3358.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-03 03:06:11', '2026-03-03 03:06:11'),
+(26, 36, 181.00, 'pending', 'Bitalag Bacnotan, La Union', 'gcash', 'delivery', NULL, '2026-03-08 11:21:07', '2026-03-09 13:25:54'),
+(29, 36, 766.50, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2026-03-13 03:17:16', '2026-03-13 03:17:16'),
+(30, 36, 169.76, 'pending', 'Bitalag Bacnotan, La Union', 'gcash', 'delivery', NULL, '2026-03-13 03:19:24', '2026-03-13 03:19:24'),
+(31, 36, 181.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2026-03-13 03:22:53', '2026-03-13 03:22:53'),
+(34, 6, 155.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'pickup', NULL, '2026-03-16 02:17:02', '2026-03-16 02:38:47'),
+(35, 6, 155.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'pickup', NULL, '2026-03-16 02:17:32', '2026-03-16 02:38:47'),
+(36, 2, 100.00, 'pending', 'Test Address', 'cod', 'pickup', NULL, '2026-03-16 02:34:21', '2026-03-16 02:34:21'),
+(37, 6, 169.76, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 02:41:34', '2026-03-16 02:41:34'),
+(38, 6, 233.76, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 02:41:52', '2026-03-16 02:41:52'),
+(39, 6, 208.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 02:42:53', '2026-03-16 02:42:53'),
+(40, 6, 208.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 02:45:31', '2026-03-16 02:45:31'),
+(41, 2, 694.00, 'pending', 'Test Address', 'cod', 'delivery', NULL, '2026-03-16 02:48:04', '2026-03-16 02:48:04'),
+(42, 2, 624.00, 'pending', 'Test Address', 'cod', 'pickup', NULL, '2026-03-16 02:48:04', '2026-03-16 02:48:04'),
+(43, 6, 169.76, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 02:48:33', '2026-03-16 02:48:33'),
+(44, 6, 113.76, 'pending', 'Test Address', 'cod', 'pickup', NULL, '2026-03-16 02:51:02', '2026-03-16 02:51:02'),
+(45, 6, 169.76, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 02:52:28', '2026-03-16 02:52:28'),
+(46, 6, 169.76, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 02:52:43', '2026-03-16 02:52:43'),
+(47, 6, 169.76, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 02:58:57', '2026-03-16 02:58:57'),
+(48, 6, 169.76, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 03:00:58', '2026-03-16 03:00:58'),
+(49, 6, 155.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 03:03:41', '2026-03-16 03:03:41'),
+(50, 6, 169.76, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 03:06:55', '2026-03-16 03:06:55'),
+(51, 2, 113.76, 'pending', 'Test Address', 'cod', 'pickup', NULL, '2026-03-16 03:57:22', '2026-03-16 03:57:22'),
+(52, 6, 169.76, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:07:42', '2026-03-16 05:07:42'),
+(53, 6, 82.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:21:05', '2026-03-16 05:21:05'),
+(54, 6, 82.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:23:32', '2026-03-16 05:23:32'),
+(55, 6, 82.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:25:17', '2026-03-16 05:25:17'),
+(56, 6, 134.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:27:34', '2026-03-16 05:27:34'),
+(57, 6, 155.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:32:56', '2026-03-16 05:32:56'),
+(58, 6, 155.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:35:11', '2026-03-16 05:35:11'),
+(59, 6, 82.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:38:17', '2026-03-16 05:38:17'),
+(60, 6, 82.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:41:52', '2026-03-16 05:41:52'),
+(61, 6, 82.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:43:18', '2026-03-16 05:43:18'),
+(62, 6, 181.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'pickup', NULL, '2026-03-16 05:46:41', '2026-03-16 05:46:41'),
+(63, 6, 181.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'delivery', NULL, '2026-03-16 05:47:09', '2026-03-16 05:47:09'),
+(64, 6, 176.00, 'pending', 'Paringao, Bauang La Union', 'gcash', 'delivery', NULL, '2026-03-16 05:47:31', '2026-03-16 05:47:31'),
+(65, 6, 245.00, 'pending', 'Paringao, Bauang La Union', 'gcash', 'delivery', NULL, '2026-03-16 05:47:58', '2026-03-16 05:47:58'),
+(66, 6, 120.00, 'pending', 'Paringao, Bauang La Union', 'gcash', 'pickup', NULL, '2026-03-16 05:51:09', '2026-03-16 05:51:09'),
+(67, 6, 30.00, 'pending', 'Paringao, Bauang La Union', 'cod', 'pickup', NULL, '2026-03-16 05:53:49', '2026-03-16 05:53:49'),
+(68, 2, 113.76, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'pickup', NULL, '2026-03-16 06:02:00', '2026-03-16 06:02:00'),
+(69, 2, 181.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'delivery', NULL, '2026-03-16 06:05:37', '2026-03-16 06:05:37'),
+(70, 2, 100.00, 'pending', 'Bitalag Bacnotan, La Union', 'cod', 'pickup', NULL, '2026-03-16 06:07:15', '2026-03-16 06:07:15'),
+(72, 39, 275.00, 'pending', 'Bitalag, Bacnotan, La Union', 'cod', 'pickup', NULL, '2026-03-16 07:21:31', '2026-03-16 07:21:31'),
+(73, 39, 100.00, 'pending', 'Bitalag, Bacnotan, La Union', 'cod', 'pickup', NULL, '2026-03-16 07:22:01', '2026-03-16 07:22:01'),
+(74, 39, 1715.52, 'pending', 'Bitalag, Bacnotan, La Union', 'cod', 'pickup', NULL, '2026-03-16 07:22:42', '2026-03-16 07:22:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `order_item_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `status` enum('pending','confirmed','shipped','delivered','cancelled') DEFAULT 'pending',
+  `tracking_number` varchar(100) DEFAULT NULL,
+  `payment_receipt` varchar(255) DEFAULT NULL,
+  `proof_photo` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`, `status`, `tracking_number`, `payment_receipt`, `proof_photo`) VALUES
+(1, 1, 12, 1, 150.00, 'delivered', 'LBC233475093', NULL, NULL),
+(2, 1, 7, 1, 120.00, 'delivered', 'LBC233793065', NULL, NULL),
+(3, 2, 7, 1, 120.00, 'delivered', 'LBC233793065', 'uploads/receipts/1761274963_26047f456b71.png', NULL),
+(4, 3, 7, 1, 120.00, 'delivered', 'LBC233475077', NULL, NULL),
+(5, 4, 2, 1, 125.00, 'delivered', 'LBC233400893', 'uploads/receipts/1761699306_ca9d5c8ae33c.png', NULL),
+(6, 5, 2, 1, 125.00, 'cancelled', '', NULL, NULL),
+(7, 6, 17, 1, 30.00, 'delivered', 'LBC233475195', 'uploads/receipts/1762311062_7a94f447de4c.jpg', NULL),
+(8, 7, 12, 1, 150.00, 'shipped', 'LBC0313000008', NULL, NULL),
+(9, 8, 2, 1, 125.00, 'delivered', 'LBC233475195', NULL, NULL),
+(10, 9, 12, 1, 150.00, 'pending', NULL, NULL, NULL),
+(11, 10, 2, 1, 125.00, 'delivered', 'LBC233475093', NULL, NULL),
+(12, 10, 17, 1, 30.00, 'delivered', 'LBC233475093', NULL, 'uploads/receipts/1770200176_2.jpg'),
+(13, 11, 12, 1, 150.00, 'pending', NULL, NULL, NULL),
+(14, 12, 1, 1, 499.00, 'delivered', 'LBC2334O5087', NULL, 'uploads/receipts/1770200145_1.png'),
+(15, 13, 12, 1, 150.00, 'delivered', 'LBC2334O5Q23', NULL, 'uploads/receipts/1770200221_3.png'),
+(16, 14, 2, 1, 125.00, 'delivered', 'LBC233400093', NULL, 'uploads/seller-proofs/1773640821_ALDWINFINAL.png'),
+(17, 15, 14, 1, 150.00, 'delivered', 'LBC233475093', NULL, 'uploads/seller-proofs/1773640804_image0.jpeg'),
+(18, 16, 1, 1, 499.00, 'delivered', 'LBC0227000018', NULL, NULL),
+(19, 17, 2, 1, 125.00, 'delivered', 'LBC233793065', NULL, NULL),
+(20, 18, 6, 1, 1715.52, 'delivered', 'LBC233223065', NULL, NULL),
+(21, 19, 1, 1, 499.00, 'delivered', 'LBC0227000021', NULL, NULL),
+(23, 21, 1, 1, 499.00, 'delivered', 'LBC233793065', NULL, NULL),
+(24, 22, 4, 1, 113.76, 'cancelled', NULL, NULL, NULL),
+(25, 23, 2, 1, 125.00, 'delivered', 'LBC0212000025', NULL, NULL),
+(26, 24, 25, 1, 275.00, 'delivered', 'LBC0227000026', NULL, NULL),
+(27, 24, 28, 1, 25.00, 'delivered', 'LBC0227000027', NULL, NULL),
+(28, 25, 30, 1, 3150.00, 'shipped', 'LBC0313000028', NULL, NULL),
+(29, 26, 5, 1, 100.00, 'delivered', 'LBC0304000029', NULL, NULL),
+(30, 27, 2, 1, 125.00, 'pending', NULL, 'uploads/receipts/1772968867_c4ea093b8700.png', NULL),
+(31, 28, 2, 1, 125.00, 'pending', NULL, NULL, NULL),
+(34, 31, 2, 1, 125.00, 'shipped', 'LBC0313000034', NULL, NULL),
+(37, 34, 5, 1, 100.00, 'pending', NULL, NULL, NULL),
+(38, 35, 5, 1, 100.00, 'shipped', 'LBC0316000038', NULL, NULL),
+(39, 37, 4, 1, 113.76, 'cancelled', NULL, NULL, NULL),
+(40, 38, 4, 1, 113.76, 'cancelled', NULL, NULL, NULL),
+(41, 39, 12, 1, 150.00, 'cancelled', NULL, NULL, NULL),
+(42, 40, 12, 1, 150.00, 'cancelled', NULL, NULL, NULL),
+(43, 41, 1, 1, 499.00, 'pending', NULL, NULL, NULL),
+(44, 41, 2, 1, 125.00, 'pending', NULL, NULL, NULL),
+(45, 42, 1, 1, 499.00, 'pending', NULL, NULL, NULL),
+(46, 42, 2, 1, 125.00, 'pending', NULL, NULL, NULL),
+(47, 43, 4, 1, 113.76, 'cancelled', NULL, NULL, NULL),
+(48, 44, 4, 1, 113.76, 'cancelled', NULL, NULL, NULL),
+(49, 45, 4, 1, 113.76, 'cancelled', NULL, NULL, NULL),
+(50, 46, 4, 1, 113.76, 'cancelled', NULL, NULL, NULL),
+(51, 47, 4, 1, 113.76, 'cancelled', NULL, NULL, NULL),
+(52, 48, 4, 1, 113.76, 'cancelled', NULL, NULL, NULL),
+(53, 49, 5, 1, 100.00, 'cancelled', NULL, NULL, NULL),
+(54, 50, 4, 1, 113.76, 'pending', NULL, NULL, NULL),
+(55, 51, 4, 1, 113.76, 'pending', NULL, NULL, NULL),
+(56, 52, 4, 1, 113.76, 'pending', NULL, NULL, NULL),
+(57, 53, 31, 1, 30.00, 'pending', NULL, NULL, NULL),
+(58, 54, 31, 1, 30.00, 'pending', NULL, NULL, NULL),
+(59, 55, 31, 1, 30.00, 'pending', NULL, NULL, NULL),
+(60, 56, 27, 1, 80.00, 'pending', NULL, NULL, NULL),
+(61, 57, 5, 1, 100.00, 'pending', NULL, NULL, NULL),
+(62, 58, 5, 1, 100.00, 'pending', NULL, NULL, NULL),
+(63, 59, 31, 1, 30.00, 'pending', NULL, NULL, NULL),
+(64, 60, 31, 1, 30.00, 'pending', NULL, NULL, NULL),
+(65, 61, 31, 1, 30.00, 'pending', NULL, NULL, NULL),
+(66, 62, 2, 1, 125.00, 'pending', NULL, NULL, NULL),
+(67, 63, 2, 1, 125.00, 'pending', NULL, NULL, NULL),
+(68, 64, 7, 1, 120.00, 'pending', NULL, 'uploads/receipts/1773640051_51ed42b8db4c.jpg', NULL),
+(69, 65, 2, 1, 125.00, 'pending', NULL, 'uploads/receipts/1773640078_d6da2b1bb747.jpg', NULL),
+(70, 66, 7, 1, 120.00, 'pending', NULL, 'uploads/receipts/1773640269_6afb0c8ec754.jpg', NULL),
+(71, 67, 31, 1, 30.00, 'shipped', 'LBC0316000071', NULL, NULL),
+(72, 68, 4, 1, 113.76, 'pending', NULL, NULL, NULL),
+(73, 69, 2, 1, 125.00, 'pending', NULL, NULL, NULL),
+(74, 70, 5, 1, 100.00, 'pending', NULL, NULL, NULL),
+(76, 72, 32, 1, 275.00, 'pending', NULL, NULL, NULL),
+(77, 73, 5, 1, 100.00, 'pending', NULL, NULL, NULL),
+(78, 74, 6, 1, 1715.52, 'pending', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_views`
+--
+
+CREATE TABLE `order_views` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `seller_id` int(11) NOT NULL,
+  `viewed_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `product_id` int(11) NOT NULL,
+  `seller_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `producers` varchar(255) DEFAULT NULL,
+  `name` varchar(200) NOT NULL,
+  `description` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `stock_quantity` int(11) NOT NULL DEFAULT 0,
+  `weight` decimal(10,2) DEFAULT 0.00,
+  `image_url` varchar(255) DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'inactive',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `size` enum('small','medium','large') DEFAULT 'small',
+  `shipping_type` enum('weight_based','size_based') DEFAULT 'weight_based'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`product_id`, `seller_id`, `category_id`, `producers`, `name`, `description`, `price`, `stock_quantity`, `weight`, `image_url`, `status`, `created_at`, `updated_at`, `size`, `shipping_type`) VALUES
+(1, 1, 1, NULL, 'Lucas Papaw Ointment', 'A soothing herbal ointment made from fermented papaya with antiseptic and healing properties. Used commonly for dry, chapped, cracked, or mildly irritated skin.', 499.00, 22, 0.25, 'uploads/product_68c6d1ef403b43.67469243.png', 'active', '2025-09-14 06:32:15', '2026-03-08 02:30:53', 'small', 'weight_based'),
+(2, 1, 1, NULL, 'Moreishi Herbal Cream 10 g', 'A small herbal cream, often used for light skin irritations or moisturizing; ingredients likely include herbal extracts. Price: ~ ₱125 via Shopee.', 125.00, 160, 0.10, 'uploads/product_68c6d2e5f275d2.97390346.png', 'active', '2025-09-14 06:36:21', '2026-03-16 06:05:37', 'small', 'weight_based'),
+(4, 1, 1, NULL, 'Comfort Balm 10 g', 'A balm by Human Nature (a brand known for more natural ingredients), used for soothing purposes (e.g. dry skin, irritated areas).', 113.76, 39, 0.10, 'uploads/product_68c6d3458de263.15516171.png', 'active', '2025-09-14 06:37:57', '2026-03-16 06:02:00', 'small', 'weight_based'),
+(5, 2, 3, NULL, 'Recycled Sari Bag', 'A bag made from recycled sari (i.e. repurposed fabric/material). Smaller, simple style.', 100.00, 383, 0.15, 'uploads/product_68c6d4a7b637f8.41568770.png', 'active', '2025-09-14 06:43:51', '2026-03-16 07:22:01', 'small', 'weight_based'),
+(6, 2, 4, NULL, 'Recycled Nylon Crossbody Bag', 'Medium sized crossbody \"dumpling\"-bag, using recycled nylon. Stylish & casual.', 1715.52, 40, 0.35, 'uploads/product_68c6d52ed74755.68850609.png', 'active', '2025-09-14 06:46:06', '2026-03-16 07:22:42', 'small', 'weight_based'),
+(7, 1, 3, NULL, 'Recycled Water Bottled', 'Water bottle made from recycled PET plastic. Good for on-the-go hydration.', 120.00, 62, 0.40, 'uploads/product_68c6d5dc4853e2.00453896.png', 'active', '2025-09-14 06:49:00', '2026-03-16 05:51:09', 'small', 'weight_based'),
+(8, 2, 4, NULL, 'Ruffle Edge Recycled Glass Clear Vase', 'Large clear vase, ruffled edge, made from recycled glass.', 682.50, 30, 1.20, 'uploads/product_68c6d73d3267c1.62043025.png', 'active', '2025-09-14 06:54:53', '2026-03-13 03:17:16', 'small', 'weight_based'),
+(9, 2, 4, NULL, 'Padma Vase Recycled Glass Jade:', 'Padma Jade-green recycled glass vase.', 580.00, 135, 1.10, 'uploads/product_68c6d79b9ca057.82011817.png', 'active', '2025-09-14 06:56:27', '2026-03-04 03:35:51', 'small', 'weight_based'),
+(10, 2, 6, NULL, 'Steel Straw Starter Set', 'What’s included: Stainless steel straight straw, bent straw, straw brush / cleaner.\r\nMaterial: Stainless steel.', 99.00, 20, 0.20, 'uploads/product_68c6d891ecc169.13941913.png', 'active', '2025-09-14 07:00:33', '2026-03-04 03:35:56', 'small', 'weight_based'),
+(11, 1, 4, NULL, 'Wheat Straw Utensils Travel Set', 'What’s included: Fork, spoon, chopsticks, in a compact box.\r\nMaterial: Wheat straw / fiber.', 110.00, 0, 0.15, 'uploads/product_68c6d92a7c15c0.09874493.png', 'active', '2025-09-14 07:03:06', '2026-03-04 03:36:05', 'small', 'weight_based'),
+(12, 2, 3, NULL, 'Eco-Style Succulent Plants', 'Add a pop of life and color to your home or office with these eco-friendly succulent plants!\r\nEach plant comes in a uniquely designed recycled pot—perfect for plant lovers, gift ideas, or room décor.', 150.00, 15, 0.50, 'uploads/product_68c6db0fa3ed68.84620184.png', 'active', '2025-09-14 07:11:11', '2026-03-16 02:45:31', 'small', 'weight_based'),
+(14, 1, 3, 'Rand Jewel Cariaso\r\nAlyssa Melecio', 'yongs Chili Garlic', 'Chili garlic 120ml', 150.00, 32, 0.25, 'uploads/product_68e45b81264c57.62633074.jpg', 'active', '2025-10-06 16:14:57', '2026-03-05 06:35:34', 'small', 'weight_based'),
+(15, 1, 6, 'DMMMMSU NLUC ATBI', 'Dmmmsu Atbi Honey Jam', 'A premium honey-based spread made by DMMMSU–NARTDI using pure, locally harvested honey.', 400.00, 79, 0.45, 'uploads/product_68eb6e3e8b6ba3.48290968.jpg', 'active', '2025-10-12 01:00:46', '2026-03-04 03:36:13', 'small', 'weight_based'),
+(16, 2, 1, 'Green Choice Philippines\r\n', 'Traditional Medicinals Organic Green Tea with Lemongrass (16 Tea Bags)', 'This premium herbal tea blend combines the refreshing taste of organic green tea with the calming aroma of lemongrass. Made with 100% certified organic ingredients, it provides a smooth, mild flavor perfect for daily wellness. Known for its antioxidants, this tea supports metabolism, boosts energy naturally, and promotes overall health. Each tea bag is individually wrapped for freshness.', 250.00, 160, 0.08, 'uploads/product_68eb701e464cc3.44205819.png', 'active', '2025-10-12 01:08:46', '2025-11-04 14:04:59', 'small', 'weight_based'),
+(17, 1, 3, 'Aurora Bucsit Angelito', 'MDew Parol', 'MDew Crafted Parol made with recycled mountain dew bottles', 30.00, 40, 0.20, 'uploads/product_690a78074789e4.44604976.jpg', 'active', '2025-11-04 14:02:47', '2025-11-12 17:20:52', 'small', 'weight_based'),
+(18, 1, 3, 'Edelita C. Ebuenga', 'keychain', 'chuchu', 55.00, 899, 0.05, 'uploads/product_691534c90a8b40.03344088.jpeg', 'active', '2025-11-12 17:30:49', '2026-02-09 17:08:49', 'small', 'weight_based'),
+(20, 9, 6, 'Jojie Higoy and Liza Gaudia', 'Elegant Blue Blossoms in a Rustic Vase', 'A charming arrangement of vivid blue flowers made with silk displayed in a classic brown vase.', 325.00, 52, 0.80, 'uploads/product_69833429dc93a5.42236528.jpg', 'active', '2026-02-04 03:57:29', '2026-03-05 17:13:12', 'small', 'weight_based'),
+(21, 9, 6, 'Jojie Higoy and Liza Gaudia', 'White Floral Arrangement in a Classic Clay Vase', 'A graceful display of white flowers from cocoons with lush green leaves, arranged in a traditional brown clay vase.', 330.00, 102, 0.90, 'uploads/product_698334bebbb607.14027232.jpg', 'active', '2026-02-04 03:59:58', '2026-02-04 04:43:38', 'small', 'weight_based'),
+(22, 9, 6, 'Jojie Higoy and Liza Gaudia', 'Cute vase Flowers', 'Small White Flowers made with cocoons', 75.00, 67, 0.30, 'uploads/product_6983356b255252.61393444.jpg', 'active', '2026-02-04 04:02:51', '2026-02-04 04:44:03', 'small', 'weight_based'),
+(23, 9, 4, 'Liza Gaudia and Jojie Higoy', 'Handcrafted Cocoon and Silk Floral Arrangement', 'A unique handcrafted floral piece made from cocoon and silk materials, featuring vibrant orange and red blossoms accented with soft purple and white details.', 650.00, 38, 0.45, 'uploads/product_69833689114bb2.92119484.jpg', 'active', '2026-02-04 04:07:37', '2026-02-04 04:42:13', 'small', 'weight_based'),
+(24, 9, 6, 'Liza Gaudia and Jojie Higoy', 'Handcrafted Decorative Flower Pots – Pink & Purple Floral Arrangement', 'This elegant handcrafted flower pot features vibrant pink and purple blooms arranged in a rustic-style container.', 680.00, 29, 0.65, 'uploads/product_698337ae25c9c3.52771296.jpg', 'active', '2026-02-04 04:12:30', '2026-02-04 04:43:54', 'small', 'weight_based'),
+(25, 9, 6, 'Jojie Higoy and Liza Gaudia', 'Handmade Ribbon Flower Hanging Tassels', 'These stunning handmade hanging decorations feature cascading ribbons in shades of blue and green, finished with a bold, layered floral centerpiece.', 275.00, 47, 0.25, 'uploads/product_698338a4384b72.88268565.jpg', 'active', '2026-02-04 04:16:36', '2026-02-26 16:39:35', 'small', 'weight_based'),
+(26, 9, 4, 'Liza Gaudia and Jojie Higoy', 'Handmade Floral Ribbon Hanging Décor', 'This handcrafted hanging décor features flowing fabric ribbons in rich green and soft yellow tones, finished with an intricately layered floral centerpiece made with organic pure silk', 650.00, 127, 0.35, 'uploads/product_69833a0888eb60.95520709.jpg', 'active', '2026-02-04 04:22:32', '2026-02-04 04:42:42', 'small', 'weight_based'),
+(27, 9, 6, 'Liza Gaudia and Jojie Higoy', 'Handcrafted Floral Award Pins & Rosettes Set Parents and Completer', 'These handcrafted floral rosettes are designed as elegant recognition pins, perfect for ceremonies and special events. Per set', 80.00, 44, 0.10, 'uploads/product_69833aa1012ed2.87878689.jpg', 'active', '2026-02-04 04:25:05', '2026-03-16 05:27:35', 'small', 'weight_based'),
+(28, 9, 4, 'Jojie HIgoy and LIza Gaudia', 'Handcrafted Cocoon SIlk Rose', 'Each rose is carefully shaped with layered petals and realistic detailing, creating a lively and cheerful bouquet made with silk cocoons\r\n\r\n20 pesos each', 25.00, 56, 0.08, 'uploads/product_69833c0b8eac07.81337801.jpg', 'active', '2026-02-04 04:31:07', '2026-02-26 16:39:35', 'small', 'weight_based'),
+(29, 9, 4, 'Jojie HIgoy and Liza Gaudia', 'Barong Shirt', 'This elegant linen cloth features subtle embroidered cross motifs, making it ideal for church use and religious ceremonies. Crafted from silk with a clean, refined finish, it offers a simple yet dignified appearance suitable for altars, lecterns, or ceremonial tables. Neatly packaged and ready for use or gifting.\r\n\r\nIdeal for: church altars, religious ceremonies, chapel décor\r\nStyle: classic, sacred, minimalist\r\nFeatures: embroidered cross details, smooth fabric finish, ceremonial use', 6650.00, 11, 0.75, 'uploads/product_69833cc889dd86.51412873.jpg', 'active', '2026-02-04 04:34:16', '2026-02-04 04:42:56', 'small', 'weight_based'),
+(30, 9, 4, 'Jojie Higoy and Liza Gaudia', 'Silk Shawl – Ecru, Medium (DMMMSU-SRDI)', 'This elegant handwoven silk shawl is crafted by the Sericulture Research and Development Institute (SRDI) of Don Mariano Marcos Memorial State University. Made from locally produced silk, the shawl features a soft texture and subtle woven patterns that reflect traditional Ilocano craftsmanship.\r\n\r\nLightweight yet refined, this medium-sized shawl is perfect for formal wear, cultural events, and special occasions. Its natural elegance and artisanal quality make it a timeless accessory or a meaningful gift.\r\n\r\nIdeal for: formal attire, cultural events, gifts, traditional wear\r\nMaterial: pure silk\r\nStyle: classic, artisanal, elegant\r\nCraftsmanship: handwoven using locally sourced silk', 3150.00, 1, 0.25, 'uploads/product_69833d5b027ad5.43356453.jpg', 'active', '2026-02-04 04:36:43', '2026-03-02 19:06:11', 'small', 'weight_based'),
+(31, 9, 4, 'Liza Gaudia and Jojie Higoy', 'Silk Cocoon Tulips', 'This charming floral arrangement features handcrafted tulips made from silk cocoons, carefully shaped and colored to resemble fresh blooms. 25  pesos each', 30.00, 15, 0.12, 'uploads/product_69833e1b1eef04.95664964.jpg', 'active', '2026-02-04 04:39:55', '2026-03-16 05:53:49', 'small', 'weight_based'),
+(32, 15, 4, 'Bacnotan LGU', 'Honey Jam', 'Pure and Sweet Honey Jam', 275.00, 118, 0.50, 'uploads/product_69b7625797d592.10511686.jpg', 'active', '2026-03-16 01:52:23', '2026-03-16 07:21:31', 'small', 'size_based');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `purchase_history`
+--
+
+CREATE TABLE `purchase_history` (
+  `purchase_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `buyer_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `seller_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `status` enum('pending','confirmed','shipped','delivered','cancelled') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `purchase_history`
+--
+
+INSERT INTO `purchase_history` (`purchase_id`, `order_id`, `buyer_id`, `product_id`, `seller_id`, `quantity`, `price`, `status`, `created_at`) VALUES
+(1, 1, 2, 12, 2, 1, 150.00, 'pending', '2025-10-24 02:10:23'),
+(2, 1, 2, 7, 1, 1, 120.00, 'pending', '2025-10-24 02:10:23'),
+(3, 2, 3, 7, 1, 1, 120.00, 'pending', '2025-10-24 03:02:43'),
+(4, 3, 2, 7, 1, 1, 120.00, 'pending', '2025-10-24 03:18:10'),
+(5, 4, 2, 2, 1, 1, 125.00, 'pending', '2025-10-29 00:55:06'),
+(6, 5, 14, 2, 1, 1, 125.00, 'pending', '2025-11-05 02:45:19'),
+(7, 6, 14, 17, 1, 1, 30.00, 'pending', '2025-11-05 02:51:02'),
+(8, 7, 2, 12, 2, 1, 150.00, 'pending', '2025-11-06 06:28:11'),
+(9, 8, 3, 2, 1, 1, 125.00, 'pending', '2025-11-06 12:17:05'),
+(10, 9, 2, 12, 2, 1, 150.00, 'pending', '2025-11-07 13:35:10'),
+(11, 10, 2, 2, 1, 1, 125.00, 'pending', '2025-11-13 01:20:52'),
+(12, 10, 2, 17, 1, 1, 30.00, 'pending', '2025-11-13 01:20:52'),
+(13, 11, 2, 12, 2, 1, 150.00, 'pending', '2025-11-13 01:58:25'),
+(14, 12, 2, 1, 1, 1, 499.00, 'pending', '2025-11-19 12:13:09'),
+(15, 13, 6, 12, 2, 1, 150.00, 'pending', '2025-11-21 06:44:09'),
+(16, 14, 6, 2, 1, 1, 125.00, 'pending', '2025-11-21 07:18:30'),
+(17, 15, 6, 14, 1, 1, 150.00, 'pending', '2025-11-21 07:57:44'),
+(18, 16, 2, 1, 1, 1, 499.00, 'pending', '2025-11-24 08:44:22'),
+(19, 17, 17, 2, 1, 1, 125.00, 'pending', '2026-02-02 12:47:21'),
+(20, 18, 19, 6, 2, 1, 1715.52, 'pending', '2026-02-03 12:33:22'),
+(21, 19, 19, 1, 1, 1, 499.00, 'pending', '2026-02-05 01:26:17'),
+(22, 20, 22, 32, 10, 1, 10000000.00, 'pending', '2026-02-05 23:42:25'),
+(23, 21, 2, 1, 1, 1, 499.00, 'pending', '2026-02-08 07:47:38'),
+(24, 24, 19, 25, 9, 1, 275.00, 'pending', '2026-02-27 00:39:35'),
+(25, 24, 19, 28, 9, 1, 25.00, 'pending', '2026-02-27 00:39:35'),
+(26, 38, 6, 4, 1, 1, 113.76, 'pending', '2026-03-16 02:41:52'),
+(27, 65, 6, 2, 1, 1, 125.00, 'pending', '2026-03-16 05:47:58'),
+(28, 66, 6, 7, 1, 1, 120.00, 'pending', '2026-03-16 05:51:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `redemptions`
+--
+
+CREATE TABLE `redemptions` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `cost` decimal(10,2) NOT NULL,
+  `order_id` varchar(255) NOT NULL,
+  `redemption_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `ecocoins_spent` int(11) NOT NULL DEFAULT 0,
+  `redeemed_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `redemptions`
+--
+
+INSERT INTO `redemptions` (`id`, `user_id`, `product_id`, `cost`, `order_id`, `redemption_date`, `ecocoins_spent`, `redeemed_at`) VALUES
+(1, 2, 2, 0.00, '994QEB7E', '2026-02-04 00:56:49', 7000, '2026-02-04 08:56:49'),
+(2, 22, 4, 0.00, 'QPBRRNFG', '2026-02-05 23:43:01', 8500, '2026-02-06 07:43:01'),
+(3, 2, 3, 0.00, 'O20T7IC6', '2026-02-09 10:53:46', 80000, '2026-02-09 18:53:46'),
+(4, 2, 2, 0.00, 'PJLNC7UZ', '2026-02-09 12:21:38', 7000, '2026-02-09 20:21:38'),
+(5, 2, 4, 0.00, 'M27IO9G2', '2026-02-09 12:21:42', 8500, '2026-02-09 20:21:42'),
+(6, 2, 1, 0.00, '4KW6OAZJ', '2026-02-09 12:21:45', 10000, '2026-02-09 20:21:45'),
+(7, 2, 2, 0.00, 'EC4RF7DI', '2026-02-09 12:21:48', 7000, '2026-02-09 20:21:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sellers`
+--
+
+CREATE TABLE `sellers` (
+  `seller_id` int(11) NOT NULL,
+  `fullname` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `phone_number` varchar(20) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `address` text DEFAULT NULL,
+  `documents` varchar(255) DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `last_login` datetime DEFAULT NULL,
+  `ecocoins_balance` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `gcash_qr` varchar(255) DEFAULT NULL,
+  `failed_attempts` int(11) NOT NULL DEFAULT 0,
+  `last_failed_at` datetime DEFAULT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
+  `reset_expires` datetime DEFAULT NULL,
+  `locked_until` datetime DEFAULT NULL,
+  `reset_token_expires` datetime DEFAULT NULL,
+  `reset_required` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sellers`
+--
+
+INSERT INTO `sellers` (`seller_id`, `fullname`, `username`, `phone_number`, `email`, `password`, `address`, `documents`, `status`, `created_at`, `updated_at`, `last_login`, `ecocoins_balance`, `gcash_qr`, `failed_attempts`, `last_failed_at`, `reset_token`, `reset_expires`, `locked_until`, `reset_token_expires`, `reset_required`) VALUES
+(1, 'Honey Boy Bucsit Corial', 'adiee', '09771279262', 'honeyboyb.corial@gmail.com', '$2y$10$4sRNBcoS72l9FYtByFtQ/eURdAj8s.EQjbHKausARWNaz3tTO2/NC', 'Bitalag Bacnotan, La Union', '[\"adiee_1757858842_0.jpg\"]', '', '2025-09-14 14:07:22', '2026-03-16 05:56:04', '2026-03-16 13:56:04', 9.98, 'uploads/gcash_qr/gcash_1_1761135310.jpg', 0, '2026-02-01 19:16:45', 'cb9e7bbb55e303e518a960838d11a1b3f4a05cd297d46b4f0c1723b8d921c4e8', '2026-02-01 20:16:46', NULL, '2026-02-06 12:03:24', 1),
+(2, 'Fernando Corial', 'nandzz', '09673165419', 'corialfernando@gmail.com', '$2y$10$SnD0GHY16GmF1ty5CRip7efDkjfLYQ222bqKoZKk8tDXrMf8UNwRa', 'Bitalag Bacnotan, La Union', '[\"nandzz_1757860110_0.jpg\"]', '', '2025-09-14 14:28:30', '2026-03-16 02:18:01', '2026-03-16 10:18:01', 58.16, 'uploads/gcash_qr/gcash_2_1762295411.jpg', 0, NULL, NULL, NULL, NULL, NULL, 0),
+(6, 'THDM ELYU', 'thdmelyu', '09630679342', 'thdmelyu@motor.org', '$2y$10$7MhJILUvpEJB6x7un1t3tuWsl3AIJJAXLXqJZH67vA3EGThd6E5Gq', 'Agoo, La Union', '[\"thdmelyu_1762171566_0.png\"]', '', '2025-11-03 12:06:07', '2025-11-03 12:06:07', NULL, 0.00, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0),
+(7, 'YES', 'yes', '09708152859', 'danielrill@gmail.com', '$2y$10$YIwjX/sH/JX6O8e3ZK2AAeKdNQGMuxpbfHdwGvcesP0koOIsGvyHW', 'Sapilang, Bacnotan, La Union', '[\"yes_1762408716_0.pdf\"]', '', '2025-11-06 05:58:37', '2026-02-01 13:42:40', '2025-11-06 13:59:14', 0.00, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0),
+(8, 'Baniely Munoz Pajarit', 'ban', '09950090082', 'banielympajarit112@gmail.com', '$2y$10$SNbQCVklUvwzKkIxp40E4O37CosID8fwBjZSou13EvBWLgapfZSX6', 'Sta Rita Bacnotan, La Union', '[\"banilayy_1762955140_0.docx\"]', '', '2025-11-12 13:45:40', '2026-02-06 14:04:23', '2026-02-01 21:27:49', 0.00, 'uploads/gcash_qr/gcash_8_1762955217.png', 0, NULL, NULL, NULL, NULL, NULL, 0),
+(9, 'SRDI MARKETING', 'msesrdi', '09468354393', 'mse.srdi@dmmmsu.edu.ph', '$2y$10$Em5gB4FuEKlDuZ/SbkQ7.edikYiFD1GVIWkiiqYgIMomtNPw9kEOG', 'Sapilang, Bacnotan, La Union', '[\"srdimarketing_1770173054_0.docx\"]', '', '2026-02-04 02:44:14', '2026-03-16 05:55:38', '2026-03-16 13:55:38', 23.00, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0),
+(10, 'Maris Racal', 'mracal', '09998891908', 'kupschstepha@gmail.cpm', '$2y$10$yxjPfPxPc6azGhWlL8l9J.Z6dN03HDp.c1dSLaxqc5ne3uy7pMv/a', 'Sapilang, Bacnotan, La Union', '[\"mracal_1770333930_0.docx\"]', '', '2026-02-05 23:25:30', '2026-02-09 10:48:36', '2026-02-09 18:48:36', 0.00, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0),
+(12, 'Roxanne Ferrer', 'roxxyyy', '09481277645', 'ferrer02042002@gmail.com', '$2y$10$Ixq.A1/oGZIm0lZJEXapxem2YW/3diixPkVdO2/h0qbCaqCu.SGga', 'Pa-o, Balaoan, La Union', NULL, '', '2026-02-28 06:19:15', '2026-03-16 06:50:27', '2026-03-16 14:50:27', 0.00, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0),
+(15, 'Nathaniel Ragmac', 'Nragmac11', '09318279272', 'tantanragmac74@gmail.com', '$2y$10$3g5I6flv.F2R.JasUQm3WuIfmwt89UGXcyK9Ftdp889by/zQTbAiO', 'Ortega Bacnotan, La Union', NULL, '', '2026-03-16 00:39:03', '2026-03-16 06:38:30', '2026-03-16 14:38:30', 0.00, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0),
+(17, 'Raynan B. Corial', 'rinanzyy', '09708152859', 'aldwinittyb.corial@gmail.com', '$2y$10$xYvDuRyEdht/yzgwcBow9.Ut5Vp0S7QJoav282vAiMC3qIovxh7Ua', 'Bitalag Bacnotan, La Union', NULL, 'active', '2026-03-16 06:15:37', '2026-03-16 06:15:37', NULL, 0.00, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0),
+(18, 'Donald Trump', 'dtrump', '09771279263', 'skupsch@dmmmsu.edu.ph', '$2y$10$z/0CeGZhwB//o.YT0hGWTOt9WhwDt/l5ybVAkDs3AbscShSk.LRbK', 'Bitalag, Bacnotan, La Union', NULL, 'active', '2026-03-16 07:23:22', '2026-03-16 07:52:32', '2026-03-16 15:52:32', 0.00, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `system_settings`
+--
+
+CREATE TABLE `system_settings` (
+  `setting_id` int(11) NOT NULL,
+  `setting_key` varchar(100) NOT NULL,
+  `setting_value` text DEFAULT NULL,
+  `setting_type` enum('string','integer','boolean','json') DEFAULT 'string',
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `system_settings`
+--
+
+INSERT INTO `system_settings` (`setting_id`, `setting_key`, `setting_value`, `setting_type`, `description`, `created_at`, `updated_at`) VALUES
+(1, 'backup_enabled', 'true', 'boolean', 'Enable automatic database backups', '2025-07-04 17:01:23', '2025-07-04 17:01:23'),
+(2, 'backup_frequency', 'daily', 'string', 'Backup frequency: daily, weekly, monthly', '2025-07-04 17:01:23', '2025-07-04 17:01:23'),
+(3, 'backup_retention_days', '30', 'integer', 'Number of days to keep backup files', '2025-07-04 17:01:23', '2025-07-04 17:01:23'),
+(4, 'backup_path', './backups/', 'string', 'Directory path for storing backup files', '2025-07-04 17:01:23', '2025-07-04 17:01:23'),
+(5, 'backup_compression', 'true', 'boolean', 'Enable compression for backup files', '2025-07-04 17:01:23', '2025-07-04 17:01:23'),
+(6, 'last_backup_date', '', 'string', 'Date and time of last successful backup', '2025-07-04 17:01:23', '2025-07-04 17:01:23'),
+(7, 'backup_file_size_limit', '100', 'integer', 'Maximum backup file size in MB', '2025-07-04 17:01:23', '2025-07-04 17:01:23'),
+(8, 'auto_restore_enabled', 'false', 'boolean', 'Enable automatic database restore functionality', '2025-07-04 17:01:23', '2025-07-04 17:01:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transaction_logs`
+--
+
+CREATE TABLE `transaction_logs` (
+  `log_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_type` enum('buyer','seller','admin') NOT NULL,
+  `action` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transaction_logs`
+--
+
+INSERT INTO `transaction_logs` (`log_id`, `user_id`, `user_type`, `action`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES
+(1, 2, 'buyer', 'order_placed', 'COD order placed, Order ID: 1, Amount: 334', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-10-24 02:10:23'),
+(2, 3, 'buyer', 'order_placed', 'GCash order placed, Order ID: 2, Amount: 176', '192.168.8.39', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36', '2025-10-24 03:02:43'),
+(3, 2, 'buyer', 'order_placed', 'COD order placed, Order ID: 3, Amount: 176', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-10-24 03:18:10'),
+(4, 2, 'buyer', 'order_placed', 'GCash order placed, Order ID: 4, Amount: 181', '192.168.8.39', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36', '2025-10-29 00:55:06'),
+(5, 2, 'seller', 'profile_update', 'Profile updated: Fernando Corial', '192.168.8.38', NULL, '2025-11-04 22:20:11'),
+(6, 2, 'seller', 'profile_update', 'Profile updated: Fernando Corial', '192.168.8.38', NULL, '2025-11-04 22:29:07'),
+(7, 2, 'seller', 'profile_update', 'Profile updated: Fernando Corial', '192.168.8.38', NULL, '2025-11-04 22:30:11'),
+(8, 14, 'buyer', 'order_placed', 'COD order placed, Order ID: 5, Amount: 181', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-11-05 02:45:19'),
+(9, 14, 'buyer', 'order_placed', 'GCash order placed, Order ID: 6, Amount: 82', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-11-05 02:51:02'),
+(10, 2, 'buyer', 'order_placed', 'COD order placed, Order ID: 7, Amount: 208', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-06 06:28:11'),
+(11, 3, 'buyer', 'order_placed', 'COD order placed, Order ID: 8, Amount: 181', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-06 12:17:05'),
+(12, 2, 'buyer', 'order_placed', 'COD order placed, Order ID: 9, Amount: 208', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-07 13:35:10'),
+(13, 8, 'seller', 'profile_update', 'Profile updated: Baniely Munoz Pajarit', '::1', NULL, '2025-11-12 13:46:57'),
+(14, 2, 'buyer', 'order_placed', 'COD order placed, Order ID: 10, Amount: 213', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-13 01:20:52'),
+(15, 2, 'buyer', 'order_placed', 'COD order placed, Order ID: 11, Amount: 208', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-13 01:58:25'),
+(16, 2, 'buyer', 'order_placed', 'COD order placed, Order ID: 12, Amount: 574', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-19 12:13:08'),
+(17, 6, 'buyer', 'order_placed', 'COD order placed, Order ID: 13, Amount: 208', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-21 06:44:09'),
+(18, 6, 'buyer', 'order_placed', 'COD order placed, Order ID: 14, Amount: 181', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-21 07:18:30'),
+(19, 6, 'buyer', 'order_placed', 'COD order placed, Order ID: 15, Amount: 208', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-21 07:57:44'),
+(20, 2, 'buyer', 'order_placed', 'COD order placed, Order ID: 16, Amount: 574', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-24 08:44:22'),
+(21, 17, 'buyer', 'order_placed', 'COD order placed, Order ID: 17, Amount: 181', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-02 12:47:21'),
+(22, 19, 'buyer', 'order_placed', 'COD order placed, Order ID: 18, Amount: 1851.52', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-03 12:33:22'),
+(23, 19, 'buyer', 'order_placed', 'COD order placed, Order ID: 19, Amount: 574', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-05 01:26:17'),
+(24, 22, 'buyer', 'order_placed', 'COD order placed, Order ID: 20, Amount: 10500050', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-05 23:42:25'),
+(25, 2, 'buyer', 'order_placed', 'COD order placed, Order ID: 21, Amount: 574', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-08 07:47:38'),
+(26, 19, 'buyer', 'order_placed', 'COD order placed, Order ID: 24, Amount: 365', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-02-27 00:39:35'),
+(27, 6, 'buyer', 'order_placed', 'COD order placed, Order ID: 38, Amount: 233.76', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-16 02:41:52'),
+(28, 6, 'buyer', 'order_placed', 'GCash order placed, Order ID: 65, Amount: 245', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-16 05:47:58'),
+(29, 6, 'buyer', 'order_placed', 'GCash order placed, Order ID: 66, Amount: 240', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-16 05:51:09');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`admin_id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `admin_activity_logs`
+--
+ALTER TABLE `admin_activity_logs`
+  ADD PRIMARY KEY (`activity_id`),
+  ADD KEY `idx_admin_id` (`admin_id`),
+  ADD KEY `idx_action` (`action`),
+  ADD KEY `idx_created_at` (`created_at`);
+
+--
+-- Indexes for table `admin_alerts`
+--
+ALTER TABLE `admin_alerts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `admin_dashboard_stats`
+--
+ALTER TABLE `admin_dashboard_stats`
+  ADD PRIMARY KEY (`stat_id`),
+  ADD KEY `idx_stat_type` (`stat_type`),
+  ADD KEY `idx_calculated_at` (`calculated_at`);
+
+--
+-- Indexes for table `bard`
+--
+ALTER TABLE `bard`
+  ADD PRIMARY KEY (`bard_id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `bardproducts`
+--
+ALTER TABLE `bardproducts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `bardproductsredeem`
+--
+ALTER TABLE `bardproductsredeem`
+  ADD PRIMARY KEY (`redeem_id`);
+
+--
+-- Indexes for table `buyers`
+--
+ALTER TABLE `buyers`
+  ADD PRIMARY KEY (`buyer_id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`cart_id`),
+  ADD UNIQUE KEY `unique_buyer_product` (`buyer_id`,`product_id`),
+  ADD KEY `buyer_id` (`buyer_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_id`);
+
+--
+-- Indexes for table `ecocoins_transactions`
+--
+ALTER TABLE `ecocoins_transactions`
+  ADD PRIMARY KEY (`transaction_id`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_user_type` (`user_type`);
+
+--
+-- Indexes for table `login_attempts`
+--
+ALTER TABLE `login_attempts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_login_identifier` (`login_identifier`(250)),
+  ADD KEY `idx_attempt_time` (`attempt_time`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`message_id`),
+  ADD KEY `buyer_id` (`buyer_id`),
+  ADD KEY `admin_id` (`admin_id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `buyer_id` (`buyer_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`order_item_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `order_views`
+--
+ALTER TABLE `order_views`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ux_order_seller` (`order_id`,`seller_id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`product_id`);
+
+--
+-- Indexes for table `purchase_history`
+--
+ALTER TABLE `purchase_history`
+  ADD PRIMARY KEY (`purchase_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `buyer_id` (`buyer_id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `seller_id` (`seller_id`);
+
+--
+-- Indexes for table `redemptions`
+--
+ALTER TABLE `redemptions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sellers`
+--
+ALTER TABLE `sellers`
+  ADD PRIMARY KEY (`seller_id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `system_settings`
+--
+ALTER TABLE `system_settings`
+  ADD PRIMARY KEY (`setting_id`),
+  ADD UNIQUE KEY `setting_key` (`setting_key`);
+
+--
+-- Indexes for table `transaction_logs`
+--
+ALTER TABLE `transaction_logs`
+  ADD PRIMARY KEY (`log_id`),
+  ADD KEY `idx_user_type` (`user_type`),
+  ADD KEY `idx_created_at` (`created_at`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admin_alerts`
+--
+ALTER TABLE `admin_alerts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `bard`
+--
+ALTER TABLE `bard`
+  MODIFY `bard_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `bardproducts`
+--
+ALTER TABLE `bardproducts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `bardproductsredeem`
+--
+ALTER TABLE `bardproductsredeem`
+  MODIFY `redeem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `buyers`
+--
+ALTER TABLE `buyers`
+  MODIFY `buyer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+
+--
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+
+--
+-- AUTO_INCREMENT for table `ecocoins_transactions`
+--
+ALTER TABLE `ecocoins_transactions`
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `login_attempts`
+--
+ALTER TABLE `login_attempts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
+
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+
+--
+-- AUTO_INCREMENT for table `order_views`
+--
+ALTER TABLE `order_views`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+
+--
+-- AUTO_INCREMENT for table `purchase_history`
+--
+ALTER TABLE `purchase_history`
+  MODIFY `purchase_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT for table `redemptions`
+--
+ALTER TABLE `redemptions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `sellers`
+--
+ALTER TABLE `sellers`
+  MODIFY `seller_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `transaction_logs`
+--
+ALTER TABLE `transaction_logs`
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
