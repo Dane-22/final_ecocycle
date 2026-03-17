@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error_message = 'Please fill in all required fields.';
     } else {
         try {
-            $stmt = $pdo->prepare("SELECT * FROM Admins WHERE (username = ? OR email = ?) AND status = 'active'");
+            $stmt = $pdo->prepare("SELECT * FROM admins WHERE (username = ? OR email = ?) AND status = 'active'");
             $stmt->execute([$login_identifier, $login_identifier]);
             $admin = $stmt->fetch();
 
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 exit();
             } else {
                 // Try bard login
-                $stmt = $pdo->prepare("SELECT * FROM Bard WHERE (username = ? OR email = ?) AND status = 'active'");
+                $stmt = $pdo->prepare("SELECT * FROM bard WHERE (username = ? OR email = ?) AND status = 'active'");
                 $stmt->execute([$login_identifier, $login_identifier]);
                 $bard = $stmt->fetch();
 
