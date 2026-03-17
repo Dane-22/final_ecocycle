@@ -118,7 +118,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_type']) && $_SESSION['u
     // Fetch cart items for the logged-in buyer
     $stmt = $pdo->prepare('
         SELECT c.*, p.name, p.price, p.image_url, p.stock_quantity, p.seller_id, p.weight, p.size, p.shipping_type, cat.name as category_name
-        FROM Cart c
+        FROM cart c
         JOIN products p ON c.product_id = p.product_id
         LEFT JOIN categories cat ON p.category_id = cat.category_id
         WHERE c.buyer_id = ?
