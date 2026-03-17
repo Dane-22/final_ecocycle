@@ -19,15 +19,17 @@ $buyer_email = $is_logged_in ? ($_SESSION['email'] ?? '') : '';
 // Get first letter for avatar
 $first_letter = strtoupper(substr($buyer_name, 0, 1));
 
-// Initialize counts
-$cart_count = 0;
+// Initialize counts (only if not already set)
+if (!isset($cart_count)) {
+    $cart_count = 0;
+}
 $messages_count = 0;
 $has_seller_account = false;
 
 // Only fetch cart/messages/seller info when we have a logged-in buyer
 if ($is_buyer) {
   try {
-    $stmt = $pdo->prepare("SELECT COUNT(*) as cart_count FROM Cart WHERE buyer_id = ?");
+    $stmt = $pdo->prepare("SELECT COUNT(*) as cart_count FROM cart WHERE buyer_id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $cart_count = $stmt->fetch()['cart_count'] ?? 0;
   } catch (PDOException $e) {
