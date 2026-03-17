@@ -19,9 +19,9 @@ try {
     $query = "
         SELECT p.*, c.name as category_name, s.fullname as seller_name,
                COUNT(CASE WHEN oi.status = 'delivered' THEN 1 END) as sales_count
-        FROM Products p 
-        JOIN Categories c ON p.category_id = c.category_id 
-        JOIN Sellers s ON p.seller_id = s.seller_id
+        FROM products p 
+        JOIN categories c ON p.category_id = c.category_id 
+        JOIN sellers s ON p.seller_id = s.seller_id
         LEFT JOIN order_items oi ON p.product_id = oi.product_id
         WHERE p.status = 'active'
     ";
@@ -47,7 +47,7 @@ try {
 
 // Fetch categories for filtering
 try {
-    $stmt = $pdo->prepare("SELECT * FROM Categories ORDER BY name");
+    $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY name");
     $stmt->execute();
     $categories = $stmt->fetchAll();
 } catch (PDOException $e) {
@@ -90,7 +90,7 @@ try {
 
 // Get buyer's order statistics
 try {
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total_orders FROM Orders WHERE buyer_id = ?");
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total_orders FROM orders WHERE buyer_id = ?");
     $stmt->execute([getCurrentUserId()]);
     $total_orders = $stmt->fetch()['total_orders'];
 } catch (PDOException $e) {

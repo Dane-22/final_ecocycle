@@ -24,7 +24,7 @@ require_once 'config/database.php';
 $has_buyer_account = false;
 
 try {
-    $stmt = $pdo->prepare("SELECT buyer_id FROM Buyers WHERE email = ? OR username = ? LIMIT 1");
+    $stmt = $pdo->prepare("SELECT buyer_id FROM buyers WHERE email = ? OR username = ? LIMIT 1");
     $stmt->execute([getCurrentEmail(), getCurrentUsername()]);
     if ($stmt->fetch()) {
         $has_buyer_account = true;

@@ -48,7 +48,7 @@ try {
     $stmt = $pdo->prepare('
         SELECT c.cart_id, c.quantity, p.product_id, p.name, p.price, p.image_url, p.stock_quantity
         FROM Cart c
-        JOIN Products p ON c.product_id = p.product_id
+        JOIN products p ON c.product_id = p.product_id
         WHERE c.buyer_id = ?
     ');
     $stmt->execute([$buyer_id]);

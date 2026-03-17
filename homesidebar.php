@@ -262,7 +262,7 @@
                 if (!isset($categories)) {
                     require_once 'config/database.php';
                     try {
-                        $stmt = $pdo->prepare("SELECT * FROM Categories ORDER BY name");
+                        $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY name");
                         $stmt->execute();
                         $categories = $stmt->fetchAll();
                     } catch (PDOException $e) {

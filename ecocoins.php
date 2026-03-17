@@ -30,7 +30,7 @@ $user_username = $_SESSION['username'];
 $eco_coins = 0;
 
 // Fetch buyer balance - use user_id first if available, fallback to email/username
-$stmt = $pdo->prepare('SELECT ecocoins_balance FROM Buyers WHERE email = ? OR username = ? ORDER BY updated_at DESC LIMIT 1');
+$stmt = $pdo->prepare('SELECT ecocoins_balance FROM buyers WHERE email = ? OR username = ? ORDER BY updated_at DESC LIMIT 1');
 $stmt->execute([$user_email, $user_username]);
 $row = $stmt->fetch();
 if ($row) {
@@ -38,7 +38,7 @@ if ($row) {
 }
 
 // Fetch seller balance - use email/username
-$stmt = $pdo->prepare('SELECT ecocoins_balance FROM Sellers WHERE email = ? OR username = ? ORDER BY updated_at DESC LIMIT 1');
+$stmt = $pdo->prepare('SELECT ecocoins_balance FROM sellers WHERE email = ? OR username = ? ORDER BY updated_at DESC LIMIT 1');
 $stmt->execute([$user_email, $user_username]);
 $row = $stmt->fetch();
 if ($row) {

@@ -13,28 +13,28 @@ $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 try {
     // Get users with both buyer and seller accounts
     if ($startDate && $endDate) {
-        $stmt = $pdo->prepare("SELECT COUNT(*) as dual_accounts FROM Buyers b INNER JOIN Sellers s ON b.email = s.email WHERE DATE(b.created_at) >= ? AND DATE(b.created_at) <= ?");
+        $stmt = $pdo->prepare("SELECT COUNT(*) as dual_accounts FROM buyers b INNER JOIN sellers s ON b.email = s.email WHERE DATE(b.created_at) >= ? AND DATE(b.created_at) <= ?");
         $stmt->execute([$startDate, $endDate]);
     } else {
-        $stmt = $pdo->query("SELECT COUNT(*) as dual_accounts FROM Buyers b INNER JOIN Sellers s ON b.email = s.email");
+        $stmt = $pdo->query("SELECT COUNT(*) as dual_accounts FROM buyers b INNER JOIN sellers s ON b.email = s.email");
     }
     $dualAccounts = intval($stmt->fetch()['dual_accounts'] ?? 0);
     
     // Get total buyers
     if ($startDate && $endDate) {
-        $stmt = $pdo->prepare("SELECT COUNT(*) as total_buyers FROM Buyers WHERE DATE(created_at) >= ? AND DATE(created_at) <= ?");
+        $stmt = $pdo->prepare("SELECT COUNT(*) as total_buyers FROM buyers WHERE DATE(created_at) >= ? AND DATE(created_at) <= ?");
         $stmt->execute([$startDate, $endDate]);
     } else {
-        $stmt = $pdo->query("SELECT COUNT(*) as total_buyers FROM Buyers");
+        $stmt = $pdo->query("SELECT COUNT(*) as total_buyers FROM buyers");
     }
     $totalBuyers = intval($stmt->fetch()['total_buyers'] ?? 0);
     
     // Get total sellers
     if ($startDate && $endDate) {
-        $stmt = $pdo->prepare("SELECT COUNT(*) as total_sellers FROM Sellers WHERE DATE(created_at) >= ? AND DATE(created_at) <= ?");
+        $stmt = $pdo->prepare("SELECT COUNT(*) as total_sellers FROM sellers WHERE DATE(created_at) >= ? AND DATE(created_at) <= ?");
         $stmt->execute([$startDate, $endDate]);
     } else {
-        $stmt = $pdo->query("SELECT COUNT(*) as total_sellers FROM Sellers");
+        $stmt = $pdo->query("SELECT COUNT(*) as total_sellers FROM sellers");
     }
     $totalSellers = intval($stmt->fetch()['total_sellers'] ?? 0);
     
@@ -46,19 +46,19 @@ try {
     $totalUsers = $totalBuyers + $totalSellers - $dualAccounts;
     
     // Get pending products for verification
-    $stmt = $pdo->query("SELECT COUNT(*) as pending_products FROM Products WHERE status = 'pending'");
+    $stmt = $pdo->query("SELECT COUNT(*) as pending_products FROM products WHERE status = 'pending'");
     $pendingProducts = intval($stmt->fetch()['pending_products'] ?? 0);
     
     // Get seller products pending admin verification (status = 'inactive')
-    $stmt = $pdo->query("SELECT COUNT(*) as pending_seller_products FROM Products WHERE status = 'inactive'");
+    $stmt = $pdo->query("SELECT COUNT(*) as pending_seller_products FROM products WHERE status = 'inactive'");
     $pendingSellerProducts = intval($stmt->fetch()['pending_seller_products'] ?? 0);
     
     // Get total sales
     if ($startDate && $endDate) {
-        $stmt = $pdo->prepare("SELECT SUM(total_amount) as total_sales FROM Orders WHERE status != 'cancelled' AND DATE(created_at) >= ? AND DATE(created_at) <= ?");
+        $stmt = $pdo->prepare("SELECT SUM(total_amount) as total_sales FROM orders WHERE status != 'cancelled' AND DATE(created_at) >= ? AND DATE(created_at) <= ?");
         $stmt->execute([$startDate, $endDate]);
     } else {
-        $stmt = $pdo->query("SELECT SUM(total_amount) as total_sales FROM Orders WHERE status != 'cancelled'");
+        $stmt = $pdo->query("SELECT SUM(total_amount) as total_sales FROM orders WHERE status != 'cancelled'");
     }
     $result = $stmt->fetch();
     $totalSales = floatval($result['total_sales'] ?? 0);
@@ -68,8 +68,8 @@ try {
         $stmt = $pdo->prepare("
             SELECT o.order_id, o.created_at, o.status, o.total_amount,
                    b.fullname as customer_name
-            FROM Orders o 
-            JOIN Buyers b ON o.buyer_id = b.buyer_id
+            FROM orders o 
+            JOIN buyers b ON o.buyer_id = b.buyer_id
             WHERE o.status != 'cancelled' AND DATE(o.created_at) >= ? AND DATE(o.created_at) <= ?
             ORDER BY o.created_at DESC
             LIMIT 5
@@ -79,8 +79,8 @@ try {
         $stmt = $pdo->query("
             SELECT o.order_id, o.created_at, o.status, o.total_amount,
                    b.fullname as customer_name
-            FROM Orders o 
-            JOIN Buyers b ON o.buyer_id = b.buyer_id
+            FROM orders o 
+            JOIN buyers b ON o.buyer_id = b.buyer_id
             WHERE o.status != 'cancelled'
             ORDER BY o.created_at DESC
             LIMIT 5
@@ -140,9 +140,9 @@ try {
         $stmt = $pdo->prepare("
             SELECT COUNT(*) as count 
             FROM (
-                SELECT created_at FROM Buyers WHERE MONTH(created_at) = :month AND YEAR(created_at) = :year
+                SELECT created_at FROM buyers WHERE MONTH(created_at) = :month AND YEAR(created_at) = :year
                 UNION ALL
-                SELECT created_at FROM Sellers WHERE MONTH(created_at) = :month AND YEAR(created_at) = :year
+                SELECT created_at FROM sellers WHERE MONTH(created_at) = :month AND YEAR(created_at) = :year
             ) as combined
         ");
         $stmt->execute(['month' => $monthNum, 'year' => $year]);

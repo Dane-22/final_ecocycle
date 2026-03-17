@@ -18,8 +18,8 @@ if (file_exists(__DIR__ . '/../.env')) {
 // Email configuration from environment variables
 $smtpHost = getenv('SMTP_HOST') ?: 'smtp.gmail.com';
 $smtpPort = getenv('SMTP_PORT') ?: 587;
-$emailUsername = getenv('EMAIL_USERNAME') ?: 'your_email@gmail.com';
-$emailPassword = getenv('EMAIL_PASSWORD') ?: 'your_app_password';
+$emailUsername = getenv('EMAIL_USERNAME') ?: 'honeyboyb.corial@gmail.com';
+$emailPassword = getenv('EMAIL_PASSWORD') ?: 'keew djpl zgpw clpv';
 $emailFrom = getenv('EMAIL_FROM') ?: 'no-reply@ecocycle-nluc.com';
 $emailFromName = getenv('EMAIL_FROM_NAME') ?: 'EcoCycle NLUC';
 

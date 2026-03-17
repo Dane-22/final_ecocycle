@@ -29,11 +29,11 @@ try {
             oi.quantity,
             oi.price as item_price,
             c.name as category_name
-        FROM Orders o
-        JOIN Order_Items oi ON o.order_id = oi.order_id
-        JOIN Products p ON oi.product_id = p.product_id
-        JOIN Buyers b ON o.buyer_id = b.buyer_id
-        LEFT JOIN Categories c ON p.category_id = c.category_id
+        FROM orders o
+        JOIN order_items oi ON o.order_id = oi.order_id
+        JOIN products p ON oi.product_id = p.product_id
+        JOIN buyers b ON o.buyer_id = b.buyer_id
+        LEFT JOIN categories c ON p.category_id = c.category_id
         WHERE p.seller_id = ?
         ORDER BY o.created_at DESC
     ";

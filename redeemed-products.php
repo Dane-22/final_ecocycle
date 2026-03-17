@@ -22,14 +22,14 @@ $balance = 0;
 
 // Use PDO for both queries
 // Fetch buyer balance
-$stmt = $pdo->prepare('SELECT ecocoins_balance FROM Buyers WHERE email = ? OR username = ? LIMIT 1');
+$stmt = $pdo->prepare('SELECT ecocoins_balance FROM buyers WHERE email = ? OR username = ? LIMIT 1');
 $stmt->execute([$user_email, $user_username]);
 $row = $stmt->fetch();
 if ($row) {
     $balance += (float)$row['ecocoins_balance'];
 }
 // Fetch seller balance
-$stmt = $pdo->prepare('SELECT ecocoins_balance FROM Sellers WHERE email = ? OR username = ? LIMIT 1');
+$stmt = $pdo->prepare('SELECT ecocoins_balance FROM sellers WHERE email = ? OR username = ? LIMIT 1');
 $stmt->execute([$user_email, $user_username]);
 $row = $stmt->fetch();
 if ($row) {

@@ -22,8 +22,8 @@ try {
     // Fetch order info and buyer info
     $stmt = $pdo->prepare('
         SELECT o.*, b.fullname as buyer_name, b.email as buyer_email, b.phone_number, b.address as shipping_address
-        FROM Orders o
-        JOIN Buyers b ON o.buyer_id = b.buyer_id
+        FROM orders o
+        JOIN buyers b ON o.buyer_id = b.buyer_id
         WHERE o.order_id = ?
     ');
     $stmt->execute([$order_id]);
@@ -37,10 +37,10 @@ try {
     // Fetch order items
     $stmt = $pdo->prepare('
         SELECT oi.*, p.name as product_name, p.image_url, s.fullname as seller_name, cat.name as category_name
-        FROM Order_Items oi
-        JOIN Products p ON oi.product_id = p.product_id
-        JOIN Sellers s ON p.seller_id = s.seller_id
-        LEFT JOIN Categories cat ON p.category_id = cat.category_id
+        FROM order_items oi
+        JOIN products p ON oi.product_id = p.product_id
+        JOIN sellers s ON p.seller_id = s.seller_id
+        LEFT JOIN categories cat ON p.category_id = cat.category_id
         WHERE oi.order_id = ?
     ');
     $stmt->execute([$order_id]);
@@ -185,7 +185,7 @@ try {
 
     // Fetch buyer's current EcoCoins balance for EcoCoins payment display
     $buyer_ecocoins_balance = 0;
-    $stmt = $pdo->prepare('SELECT ecocoins_balance FROM Buyers WHERE buyer_id = ?');
+    $stmt = $pdo->prepare('SELECT ecocoins_balance FROM buyers WHERE buyer_id = ?');
     $stmt->execute([$order['buyer_id']]);
     $buyer = $stmt->fetch();
     if ($buyer) {

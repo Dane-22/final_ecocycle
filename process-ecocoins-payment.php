@@ -51,7 +51,7 @@ try {
     $seller_id = null;
     
     // Check buyer balance
-    $stmt = $pdo->prepare('SELECT buyer_id, ecocoins_balance FROM Buyers WHERE email = ? OR username = ? LIMIT 1');
+    $stmt = $pdo->prepare('SELECT buyer_id, ecocoins_balance FROM buyers WHERE email = ? OR username = ? LIMIT 1');
     $stmt->execute([$user_email, $user_username]);
     $row = $stmt->fetch();
     if ($row) {
@@ -61,7 +61,7 @@ try {
     }
     
     // Check seller balance
-    $stmt = $pdo->prepare('SELECT seller_id, ecocoins_balance FROM Sellers WHERE email = ? OR username = ? LIMIT 1');
+    $stmt = $pdo->prepare('SELECT seller_id, ecocoins_balance FROM sellers WHERE email = ? OR username = ? LIMIT 1');
     $stmt->execute([$user_email, $user_username]);
     $row = $stmt->fetch();
     if ($row) {
@@ -74,7 +74,7 @@ try {
     $stmt = $pdo->prepare('
         SELECT c.cart_id, c.quantity, p.product_id, p.name, p.price, p.image_url, p.stock_quantity, p.seller_id
         FROM Cart c
-        JOIN Products p ON c.product_id = p.product_id
+        JOIN products p ON c.product_id = p.product_id
         WHERE c.buyer_id = ?
     ');
     $stmt->execute([$user_id]);
@@ -124,7 +124,7 @@ try {
     
     // Create order
     $stmt = $pdo->prepare('
-        INSERT INTO Orders (buyer_id, total_amount, status, shipping_address, payment_method, delivery_method, created_at)
+        INSERT INTO orders (buyer_id, total_amount, status, shipping_address, payment_method, delivery_method, created_at)
         VALUES (?, ?, ?, ?, ?, ?, NOW())
     ');
     $stmt->execute([$user_id, $adjusted_amount, 'pending', $shipping_address, $payment_method, $delivery_method]);
@@ -134,14 +134,14 @@ try {
     foreach ($cart_items as $item) {
         // Insert order item
         $stmt = $pdo->prepare('
-            INSERT INTO Order_Items (order_id, product_id, quantity, price)
+            INSERT INTO order_items (order_id, product_id, quantity, price)
             VALUES (?, ?, ?, ?)
         ');
         $stmt->execute([$order_id_db, $item['product_id'], $item['quantity'], $item['price']]);
         
         // Update product stock
         $stmt = $pdo->prepare('
-            UPDATE Products 
+            UPDATE products 
             SET stock_quantity = stock_quantity - ? 
             WHERE product_id = ?
         ');
@@ -168,7 +168,7 @@ try {
     if ($buyer_balance > 0 && $buyer_id !== null) {
         $deduct_from_buyer = min($buyer_balance, $ecocoins_required);
         $stmt = $pdo->prepare('
-            UPDATE Buyers 
+            UPDATE buyers 
             SET ecocoins_balance = ecocoins_balance - ? 
             WHERE buyer_id = ?
         ');
@@ -197,7 +197,7 @@ try {
     if ($ecocoins_required > 0 && $seller_balance > 0 && $seller_id !== null) {
         $deduct_from_seller = min($seller_balance, $ecocoins_required);
         $stmt = $pdo->prepare('
-            UPDATE Sellers 
+            UPDATE sellers 
             SET ecocoins_balance = ecocoins_balance - ? 
             WHERE seller_id = ?
         ');

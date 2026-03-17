@@ -27,23 +27,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $error_message = "Please enter a valid email address.";
         } else {
             // Check if username is already taken by another user
-            $stmt = $pdo->prepare("SELECT buyer_id FROM Buyers WHERE username = ? AND buyer_id != ?");
+            $stmt = $pdo->prepare("SELECT buyer_id FROM buyers WHERE username = ? AND buyer_id != ?");
             $stmt->execute([$username, getCurrentUserId()]);
             if ($stmt->fetch()) {
                 $error_message = "Username is already taken by another user.";
             } else {
                 // Check if email is already taken by another user
-                $stmt = $pdo->prepare("SELECT buyer_id FROM Buyers WHERE email = ? AND buyer_id != ?");
+                $stmt = $pdo->prepare("SELECT buyer_id FROM buyers WHERE email = ? AND buyer_id != ?");
                 $stmt->execute([$email, getCurrentUserId()]);
                 if ($stmt->fetch()) {
                     $error_message = "Email address is already taken by another user.";
                 } else {
                     // Update profile
-                    $stmt = $pdo->prepare("UPDATE Buyers SET fullname = ?, username = ?, email = ?, phone_number = ?, address = ? WHERE buyer_id = ?");
+                    $stmt = $pdo->prepare("UPDATE buyers SET fullname = ?, username = ?, email = ?, phone_number = ?, address = ? WHERE buyer_id = ?");
                     $stmt->execute([$fullname, $username, $email, $phone, $address, getCurrentUserId()]);
                     
                     // Also update seller account if exists with same email or username
-                    $stmt = $pdo->prepare("UPDATE Sellers SET fullname = ?, username = ?, email = ?, phone_number = ?, address = ? WHERE email = ? OR username = ?");
+                    $stmt = $pdo->prepare("UPDATE sellers SET fullname = ?, username = ?, email = ?, phone_number = ?, address = ? WHERE email = ? OR username = ?");
                     $stmt->execute([$fullname, $username, $email, $phone, $address, $email, $username]);
                     
                     // Update session data to reflect changes immediately
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // Get buyer data from database
 try {
-    $stmt = $pdo->prepare("SELECT * FROM Buyers WHERE buyer_id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM buyers WHERE buyer_id = ?");
     $stmt->execute([getCurrentUserId()]);
     $buyer = $stmt->fetch();
     
@@ -77,7 +77,7 @@ try {
 
 // Get buyer's order statistics
 try {
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total_orders FROM Orders WHERE buyer_id = ?");
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total_orders FROM orders WHERE buyer_id = ?");
     $stmt->execute([getCurrentUserId()]);
     $total_orders = $stmt->fetch()['total_orders'];
 } catch (PDOException $e) {
@@ -96,7 +96,7 @@ try {
 // Check if the user has a seller account
 $has_seller_account = false;
 try {
-    $stmt = $pdo->prepare("SELECT seller_id FROM Sellers WHERE buyer_id = ?");
+    $stmt = $pdo->prepare("SELECT seller_id FROM sellers WHERE buyer_id = ?");
     $stmt->execute([getCurrentUserId()]);
     if ($stmt->fetch()) {
         $has_seller_account = true;

@@ -22,7 +22,7 @@ if (isset($_SESSION['email'])) {
 if (isset($_SESSION['user_id']) && isset($_SESSION['user_type'])) {
     require_once 'config/database.php';
     if ($_SESSION['user_type'] === 'buyer') {
-        $stmt = $pdo->prepare('SELECT phone_number, address FROM Buyers WHERE buyer_id = ?');
+        $stmt = $pdo->prepare('SELECT phone_number, address FROM buyers WHERE buyer_id = ?');
         $stmt->execute([$_SESSION['user_id']]);
         $row = $stmt->fetch();
         if ($row) {
@@ -30,7 +30,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_type'])) {
             $address = $row['address'];
         }
     } elseif ($_SESSION['user_type'] === 'seller') {
-        $stmt = $pdo->prepare('SELECT phone_number, address FROM Sellers WHERE seller_id = ?');
+        $stmt = $pdo->prepare('SELECT phone_number, address FROM sellers WHERE seller_id = ?');
         $stmt->execute([$_SESSION['user_id']]);
         $row = $stmt->fetch();
         if ($row) {
@@ -110,7 +110,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_type']) && $_SESSION['u
     $buyer_id = $_SESSION['user_id'];
     
     // Fetch user's EcoCoins balance
-    $stmt = $pdo->prepare('SELECT ecocoins_balance FROM Buyers WHERE buyer_id = ?');
+    $stmt = $pdo->prepare('SELECT ecocoins_balance FROM buyers WHERE buyer_id = ?');
     $stmt->execute([$buyer_id]);
     $buyer = $stmt->fetch();
     $user_ecocoins_balance = $buyer ? (float)$buyer['ecocoins_balance'] : 0;
@@ -119,8 +119,8 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_type']) && $_SESSION['u
     $stmt = $pdo->prepare('
         SELECT c.*, p.name, p.price, p.image_url, p.stock_quantity, p.seller_id, p.weight, p.size, p.shipping_type, cat.name as category_name
         FROM Cart c
-        JOIN Products p ON c.product_id = p.product_id
-        LEFT JOIN Categories cat ON p.category_id = cat.category_id
+        JOIN products p ON c.product_id = p.product_id
+        LEFT JOIN categories cat ON p.category_id = cat.category_id
         WHERE c.buyer_id = ?
     ');
     $stmt->execute([$buyer_id]);
@@ -233,7 +233,7 @@ if (!empty($cart_items)) {
     if (!empty($seller_ids)) {
         // Prepare placeholders and fetch seller info
         $placeholders = implode(',', array_fill(0, count($seller_ids), '?'));
-        $stmt = $pdo->prepare("SELECT seller_id, fullname, username, gcash_qr, phone_number FROM Sellers WHERE seller_id IN ($placeholders)");
+        $stmt = $pdo->prepare("SELECT seller_id, fullname, username, gcash_qr, phone_number FROM sellers WHERE seller_id IN ($placeholders)");
         $stmt->execute($seller_ids);
         $srows = $stmt->fetchAll();
         foreach ($srows as $sr) {

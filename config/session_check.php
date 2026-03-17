@@ -18,12 +18,12 @@ try {
     if ($_SESSION['user_type'] == 'buyer') {
         // Check if status column exists first
         try {
-            $stmt = $pdo->prepare("SHOW COLUMNS FROM Buyers LIKE 'status'");
+            $stmt = $pdo->prepare("SHOW COLUMNS FROM buyers LIKE 'status'");
             $stmt->execute();
             $statusColumnExists = $stmt->rowCount() > 0;
             
             if ($statusColumnExists) {
-                $stmt = $pdo->prepare("SELECT status FROM Buyers WHERE buyer_id = ?");
+                $stmt = $pdo->prepare("SELECT status FROM buyers WHERE buyer_id = ?");
                 $stmt->execute([$_SESSION['user_id']]);
                 $user = $stmt->fetch();
                 
@@ -40,7 +40,7 @@ try {
             error_log("Error checking buyer status column: " . $e->getMessage());
         }
     } elseif ($_SESSION['user_type'] == 'seller') {
-        $stmt = $pdo->prepare("SELECT status FROM Sellers WHERE seller_id = ?");
+        $stmt = $pdo->prepare("SELECT status FROM sellers WHERE seller_id = ?");
         $stmt->execute([$_SESSION['user_id']]);
         $user = $stmt->fetch();
         

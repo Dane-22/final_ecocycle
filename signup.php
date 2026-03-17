@@ -109,14 +109,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (empty($error_message)) {
             try {
                 // Check if username already exists (case sensitive)
-                $stmt = $pdo->prepare("SELECT username FROM Buyers WHERE BINARY username = ? UNION SELECT username FROM Sellers WHERE BINARY username = ?");
+                $stmt = $pdo->prepare("SELECT username FROM buyers WHERE BINARY username = ? UNION SELECT username FROM sellers WHERE BINARY username = ?");
                 $stmt->execute([$username, $username]);
                 
                 if ($stmt->rowCount() > 0) {
                   $error_message = 'Username already exists. Please choose a different username.';
                 } else {
                   // Check if email already exists (case sensitive)
-                  $stmt = $pdo->prepare("SELECT email FROM Buyers WHERE BINARY email = ? UNION SELECT email FROM Sellers WHERE BINARY email = ?");
+                  $stmt = $pdo->prepare("SELECT email FROM buyers WHERE BINARY email = ? UNION SELECT email FROM sellers WHERE BINARY email = ?");
                   $stmt->execute([$email, $email]);
                     
                   if ($stmt->rowCount() > 0) {
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $seller_registered = false;
                     
                     // Register as Buyer
-                    $stmt = $pdo->prepare("INSERT INTO Buyers (fullname, username, phone_number, email, password, address, documents) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    $stmt = $pdo->prepare("INSERT INTO buyers (fullname, username, phone_number, email, password, address, documents) VALUES (?, ?, ?, ?, ?, ?, ?)");
                     $stmt->execute([$full_name, $username, $phone, $email, $hashed_password, $address, $documents]);
                     $buyer_id = $pdo->lastInsertId();
                     $buyer_registered = true;

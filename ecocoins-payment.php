@@ -39,7 +39,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_type'])) {
     $user_username = $_SESSION['username'];
     
     // Fetch buyer balance
-    $stmt = $pdo->prepare('SELECT ecocoins_balance FROM Buyers WHERE email = ? OR username = ? LIMIT 1');
+    $stmt = $pdo->prepare('SELECT ecocoins_balance FROM buyers WHERE email = ? OR username = ? LIMIT 1');
     $stmt->execute([$user_email, $user_username]);
     $row = $stmt->fetch();
     if ($row) {
@@ -47,7 +47,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_type'])) {
     }
     
     // Fetch seller balance
-    $stmt = $pdo->prepare('SELECT ecocoins_balance FROM Sellers WHERE email = ? OR username = ? LIMIT 1');
+    $stmt = $pdo->prepare('SELECT ecocoins_balance FROM sellers WHERE email = ? OR username = ? LIMIT 1');
     $stmt->execute([$user_email, $user_username]);
     $row = $stmt->fetch();
     if ($row) {
@@ -69,7 +69,7 @@ if (isset($_GET['shipping_address'])) {
     $user_username = $_SESSION['username'];
     
     // Fetch buyer address
-    $stmt = $pdo->prepare('SELECT address FROM Buyers WHERE email = ? OR username = ? LIMIT 1');
+    $stmt = $pdo->prepare('SELECT address FROM buyers WHERE email = ? OR username = ? LIMIT 1');
     $stmt->execute([$user_email, $user_username]);
     $row = $stmt->fetch();
     if ($row && $row['address']) {
@@ -78,7 +78,7 @@ if (isset($_GET['shipping_address'])) {
     
     // If no buyer address, try seller address
     if (empty($user_address)) {
-        $stmt = $pdo->prepare('SELECT address FROM Sellers WHERE email = ? OR username = ? LIMIT 1');
+        $stmt = $pdo->prepare('SELECT address FROM sellers WHERE email = ? OR username = ? LIMIT 1');
         $stmt->execute([$user_email, $user_username]);
         $row = $stmt->fetch();
         if ($row && $row['address']) {

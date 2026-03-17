@@ -24,7 +24,7 @@ try {
     $email = getCurrentEmail();
 
     // Get buyer info (including phone, address, password)
-    $stmt = $pdo->prepare('SELECT * FROM Buyers WHERE buyer_id = ?');
+    $stmt = $pdo->prepare('SELECT * FROM buyers WHERE buyer_id = ?');
     $stmt->execute([$buyer_id]);
     $buyer = $stmt->fetch();
     
@@ -39,7 +39,7 @@ try {
     $password = $buyer['password']; // Already hashed
 
     // Check if already a seller (by email or username)
-    $stmt = $pdo->prepare('SELECT * FROM Sellers WHERE email = ? OR username = ?');
+    $stmt = $pdo->prepare('SELECT * FROM sellers WHERE email = ? OR username = ?');
     $stmt->execute([$email, $username]);
     $seller = $stmt->fetch();
 

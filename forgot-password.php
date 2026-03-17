@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         // Check if email exists in the selected user type table
         if ($user_type == 'buyer') {
-            $stmt = $pdo->prepare("SELECT * FROM Buyers WHERE email = ?");
+            $stmt = $pdo->prepare("SELECT * FROM buyers WHERE email = ?");
         } else {
-            $stmt = $pdo->prepare("SELECT * FROM Sellers WHERE email = ?");
+            $stmt = $pdo->prepare("SELECT * FROM sellers WHERE email = ?");
         }
         
         $stmt->execute([$email]);
@@ -30,9 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             // Store token in database
             if ($user_type == 'buyer') {
-                $update_stmt = $pdo->prepare("UPDATE Buyers SET reset_token = ?, reset_token_expires = ?, reset_required = 1 WHERE buyer_id = ?");
+                $update_stmt = $pdo->prepare("UPDATE buyers SET reset_token = ?, reset_token_expires = ?, reset_required = 1 WHERE buyer_id = ?");
             } else {
-                $update_stmt = $pdo->prepare("UPDATE Sellers SET reset_token = ?, reset_token_expires = ?, reset_required = 1 WHERE seller_id = ?");
+                $update_stmt = $pdo->prepare("UPDATE sellers SET reset_token = ?, reset_token_expires = ?, reset_required = 1 WHERE seller_id = ?");
             }
             
             $update_stmt->execute([$token, $expires, $user[$user_type . '_id']]);

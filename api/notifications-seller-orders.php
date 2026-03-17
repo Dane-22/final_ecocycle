@@ -24,8 +24,8 @@ try {
             o.buyer_id,
             b.fullname as buyer_name
         FROM notifications n
-        LEFT JOIN Orders o ON n.order_id = o.order_id
-        LEFT JOIN Buyers b ON o.buyer_id = b.buyer_id
+        LEFT JOIN orders o ON n.order_id = o.order_id
+        LEFT JOIN buyers b ON o.buyer_id = b.buyer_id
         WHERE n.user_id = ? 
         AND n.user_type = 'seller' 
         AND n.type = 'order' 

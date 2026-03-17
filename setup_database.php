@@ -35,16 +35,16 @@ $buyer_columns = [
 foreach ($buyer_columns as $column => $definition) {
     try {
         // Check if column exists
-        $stmt = $pdo->prepare("SHOW COLUMNS FROM Buyers LIKE ?");
+        $stmt = $pdo->prepare("SHOW COLUMNS FROM buyers LIKE ?");
         $stmt->execute([$column]);
         $exists = $stmt->fetch();
         
         if (!$exists) {
-            $sql = "ALTER TABLE Buyers ADD COLUMN {$column} {$definition}";
+            $sql = "ALTER TABLE buyers ADD COLUMN {$column} {$definition}";
             $pdo->exec($sql);
             echo '<p style="color: green;">✓ Added ' . htmlspecialchars($column) . ' to Buyers table</p>';
         } else {
-            echo '<p style="color: blue;">→ ' . htmlspecialchars($column) . ' already exists in Buyers table</p>';
+            echo '<p style="color: blue;">→ ' . htmlspecialchars($column) . ' already exists in buyers table</p>';
         }
     } catch (PDOException $e) {
         echo '<p style="color: red;">✗ Error adding ' . htmlspecialchars($column) . ' to Buyers: ' . htmlspecialchars($e->getMessage()) . '</p>';
@@ -56,19 +56,19 @@ echo '<h3>Adding reset columns to Sellers table...</h3>';
 foreach ($buyer_columns as $column => $definition) {
     try {
         // Check if column exists
-        $stmt = $pdo->prepare("SHOW COLUMNS FROM Sellers LIKE ?");
+        $stmt = $pdo->prepare("SHOW COLUMNS FROM sellers LIKE ?");
         $stmt->execute([$column]);
         $exists = $stmt->fetch();
         
         if (!$exists) {
-            $sql = "ALTER TABLE Sellers ADD COLUMN {$column} {$definition}";
+            $sql = "ALTER TABLE sellers ADD COLUMN {$column} {$definition}";
             $pdo->exec($sql);
             echo '<p style="color: green;">✓ Added ' . htmlspecialchars($column) . ' to Sellers table</p>';
         } else {
-            echo '<p style="color: blue;">→ ' . htmlspecialchars($column) . ' already exists in Sellers table</p>';
+            echo '<p style="color: blue;">→ ' . htmlspecialchars($column) . ' already exists in sellers table</p>';
         }
     } catch (PDOException $e) {
-        echo '<p style="color: red;">✗ Error adding ' . htmlspecialchars($column) . ' to Sellers: ' . htmlspecialchars($e->getMessage()) . '</p>';
+        echo '<p style="color: red;">✗ Error adding ' . htmlspecialchars($column) . ' to sellers: ' . htmlspecialchars($e->getMessage()) . '</p>';
     }
 }
 

@@ -43,7 +43,7 @@ if ($is_buyer) {
   }
 
   try {
-    $stmt = $pdo->prepare("SELECT seller_id FROM Sellers WHERE email = ? OR username = ? LIMIT 1");
+    $stmt = $pdo->prepare("SELECT seller_id FROM sellers WHERE email = ? OR username = ? LIMIT 1");
     $stmt->execute([$buyer_email, $buyer_username]);
     if ($stmt->fetch()) {
       $has_seller_account = true;
@@ -1078,7 +1078,7 @@ if ($is_buyer) {
             <?php
             require_once 'config/database.php';
             try {
-              $stmt = $pdo->prepare("SELECT DISTINCT s.seller_id, s.fullname as seller_name FROM Sellers s JOIN Products p ON s.seller_id = p.seller_id WHERE p.status = 'active' ORDER BY s.fullname");
+              $stmt = $pdo->prepare("SELECT DISTINCT s.seller_id, s.fullname as seller_name FROM sellers s JOIN products p ON s.seller_id = p.seller_id WHERE p.status = 'active' ORDER BY s.fullname");
               $stmt->execute();
               $sellers = $stmt->fetchAll();
             } catch (PDOException $e) {

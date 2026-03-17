@@ -86,7 +86,7 @@ try {
     $stmt = $pdo->prepare('
         SELECT c.cart_id, c.quantity, p.product_id, p.name, p.price, p.image_url, p.stock_quantity, p.seller_id
         FROM Cart c
-        JOIN Products p ON c.product_id = p.product_id
+        JOIN products p ON c.product_id = p.product_id
         WHERE c.buyer_id = ?
     ');
     $stmt->execute([$user_id]);
@@ -125,7 +125,7 @@ try {
 
     // Create order with payment_method = 'gcash'
     $stmt = $pdo->prepare(
-        "INSERT INTO Orders (buyer_id, total_amount, status, shipping_address, payment_method, delivery_method, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())"
+        "INSERT INTO orders (buyer_id, total_amount, status, shipping_address, payment_method, delivery_method, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())"
     );
     $stmt->execute([$user_id, $adjusted_amount, 'pending', $shipping_address, $payment_method, $delivery_method]);
     $order_id_db = $pdo->lastInsertId();
@@ -136,13 +136,13 @@ try {
         // Insert order item (include payment_receipt if available)
         if ($savedReceiptPath) {
             $stmt = $pdo->prepare('
-                INSERT INTO Order_Items (order_id, product_id, quantity, price, payment_receipt)
+                INSERT INTO order_items (order_id, product_id, quantity, price, payment_receipt)
                 VALUES (?, ?, ?, ?, ?)
             ');
             $stmt->execute([$order_id_db, $item['product_id'], $item['quantity'], $item['price'], $savedReceiptPath]);
         } else {
             $stmt = $pdo->prepare('
-                INSERT INTO Order_Items (order_id, product_id, quantity, price)
+                INSERT INTO order_items (order_id, product_id, quantity, price)
                 VALUES (?, ?, ?, ?)
             ');
             $stmt->execute([$order_id_db, $item['product_id'], $item['quantity'], $item['price']]);
@@ -150,7 +150,7 @@ try {
 
         // Update product stock
         $stmt = $pdo->prepare('
-            UPDATE Products 
+            UPDATE products 
             SET stock_quantity = stock_quantity - ? 
             WHERE product_id = ?
         ');
@@ -197,7 +197,7 @@ try {
 		$ecocoins_awarded = round($product_subtotal / 100, 2); // 1 ecocoin per 100 pesos
 	}
         // Update user's ecocoins balance
-        $stmt = $pdo->prepare('UPDATE Buyers SET ecocoins_balance = ecocoins_balance + ? WHERE buyer_id = ?');
+        $stmt = $pdo->prepare('UPDATE buyers SET ecocoins_balance = ecocoins_balance + ? WHERE buyer_id = ?');
         $stmt->execute([$ecocoins_awarded, $user_id]);
 
         // Insert ecocoins transaction record

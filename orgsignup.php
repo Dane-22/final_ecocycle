@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($error_message)) {
     try {
       // Check if email already exists in buyers or sellers
-      $stmt = $pdo->prepare("SELECT email FROM buyers WHERE email = ? UNION SELECT email FROM sellers WHERE email = ?");
+      $stmt = $pdo->prepare("SELECT * FROM buyers WHERE email = ? UNION SELECT * FROM sellers WHERE email = ?");
       $stmt->execute([$email, $email]);
       if ($stmt->rowCount() > 0) {
         $error_message = 'Email already exists in buyers or sellers. Please use a different email address.';

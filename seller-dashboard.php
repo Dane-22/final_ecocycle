@@ -13,7 +13,7 @@ require_once 'config/database.php';
 
 // Get seller data from database
 try {
-    $stmt = $pdo->prepare("SELECT * FROM Sellers WHERE seller_id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM sellers WHERE seller_id = ?");
     $stmt->execute([getCurrentUserId()]);
     $seller = $stmt->fetch();
     
@@ -31,7 +31,7 @@ try {
     
     try {
         // Look for buyer account with same email
-        $stmt = $pdo->prepare("SELECT ecocoins_balance FROM Buyers WHERE email = ?");
+        $stmt = $pdo->prepare("SELECT ecocoins_balance FROM buyers WHERE email = ?");
         $stmt->execute([$seller['email']]);
         $buyer_account = $stmt->fetch();
         
@@ -83,9 +83,9 @@ try {
   $stmt = $pdo->prepare("
     SELECT COUNT(DISTINCT o.order_id) as total_orders, 
          SUM(oi.quantity * oi.price) as total_sales
-    FROM Orders o 
-    JOIN Order_Items oi ON o.order_id = oi.order_id 
-    JOIN Products p ON oi.product_id = p.product_id 
+    FROM orders o 
+    JOIN order_items oi ON o.order_id = oi.order_id 
+    JOIN products p ON oi.product_id = p.product_id 
     WHERE p.seller_id = ? AND o.status != 'cancelled' $date_filter
   ");
   $stmt->execute($params);
@@ -97,9 +97,9 @@ try {
     // Get total unique buyers
   $stmt = $pdo->prepare("
     SELECT COUNT(DISTINCT o.buyer_id) as total_buyers
-    FROM Orders o 
-    JOIN Order_Items oi ON o.order_id = oi.order_id 
-    JOIN Products p ON oi.product_id = p.product_id 
+    FROM orders o 
+    JOIN order_items oi ON o.order_id = oi.order_id 
+    JOIN products p ON oi.product_id = p.product_id 
     WHERE p.seller_id = ? AND o.status != 'cancelled' $date_filter
   ");
   $stmt->execute($params);
@@ -108,9 +108,9 @@ try {
     // Get total sold products (sum of quantities sold)
   $stmt = $pdo->prepare("
     SELECT SUM(oi.quantity) as sold_products
-    FROM Order_Items oi
-    JOIN Products p ON oi.product_id = p.product_id
-    JOIN Orders o ON oi.order_id = o.order_id
+    FROM order_items oi
+    JOIN products p ON oi.product_id = p.product_id
+    JOIN orders o ON oi.order_id = o.order_id
     WHERE p.seller_id = ? AND o.status != 'cancelled' $date_filter
   ");
   $stmt->execute($params);
@@ -125,10 +125,10 @@ try {
          b.fullname as buyer_name,
          p.name as product_name,
          oi.quantity, oi.price
-    FROM Orders o 
-    JOIN Order_Items oi ON o.order_id = oi.order_id 
-    JOIN Products p ON oi.product_id = p.product_id 
-    JOIN Buyers b ON o.buyer_id = b.buyer_id
+    FROM orders o 
+    JOIN order_items oi ON o.order_id = oi.order_id 
+    JOIN products p ON oi.product_id = p.product_id 
+    JOIN buyers b ON o.buyer_id = b.buyer_id
     WHERE p.seller_id = ? AND o.status != 'cancelled' $date_filter
     ORDER BY o.created_at DESC
     LIMIT 5
@@ -139,9 +139,9 @@ try {
     // Get top selling products
     $stmt = $pdo->prepare("
         SELECT p.name, p.price, p.image_url, COUNT(oi.order_item_id) as sales_count
-        FROM Products p 
-        LEFT JOIN Order_Items oi ON p.product_id = oi.product_id 
-        LEFT JOIN Orders o ON oi.order_id = o.order_id AND o.status != 'cancelled'
+        FROM products p 
+        LEFT JOIN order_items oi ON p.product_id = oi.product_id 
+        LEFT JOIN orders o ON oi.order_id = o.order_id AND o.status != 'cancelled'
         WHERE p.seller_id = ? AND p.status = 'active'
         GROUP BY p.product_id
         ORDER BY sales_count DESC
@@ -153,7 +153,7 @@ try {
     // Get product verification statistics
     $stmt = $pdo->prepare("
         SELECT status, COUNT(*) as count
-        FROM Products 
+        FROM products 
         WHERE seller_id = ?
         GROUP BY status
     ");
@@ -194,9 +194,9 @@ try {
     }
     $stmt = $pdo->prepare("
       SELECT SUM(oi.quantity * oi.price) as sales
-      FROM Orders o
-      JOIN Order_Items oi ON o.order_id = oi.order_id
-      JOIN Products p ON oi.product_id = p.product_id
+      FROM orders o
+      JOIN order_items oi ON o.order_id = oi.order_id
+      JOIN products p ON oi.product_id = p.product_id
       WHERE p.seller_id = ? AND o.status != 'cancelled' AND MONTH(o.created_at) = ? AND YEAR(o.created_at) = ? $monthly_date_filter
     ");
     $stmt->execute($monthly_params);
@@ -635,9 +635,9 @@ include 'sellerheader.php';
                           try {
                               $stmt = $pdo->prepare(
                                   "SELECT COUNT(DISTINCT o.order_id) as pending_orders
-                                   FROM Orders o
-                                   JOIN Order_Items oi ON o.order_id = oi.order_id
-                                   JOIN Products p ON oi.product_id = p.product_id
+                                   FROM orders o
+                                   JOIN order_items oi ON o.order_id = oi.order_id
+                                   JOIN products p ON oi.product_id = p.product_id
                                    WHERE p.seller_id = ? AND oi.status = 'pending'
                                      AND NOT EXISTS (
                                        SELECT 1 FROM order_views ov WHERE ov.order_id = o.order_id AND ov.seller_id = ?
@@ -647,7 +647,7 @@ include 'sellerheader.php';
                               $pending_orders = $stmt->fetch()['pending_orders'] ?? 0;
                           } catch (PDOException $e) {
                               // fallback to previous simple count if the above query fails
-                              $stmt = $pdo->prepare("SELECT COUNT(DISTINCT o.order_id) as pending_orders FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id JOIN Products p ON oi.product_id = p.product_id WHERE p.seller_id = ? AND oi.status = 'pending'");
+                              $stmt = $pdo->prepare("SELECT COUNT(DISTINCT o.order_id) as pending_orders FROM orders o JOIN order_items oi ON o.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id WHERE p.seller_id = ? AND oi.status = 'pending'");
                               $stmt->execute([getCurrentUserId()]);
                               $pending_orders = $stmt->fetch()['pending_orders'] ?? 0;
                           }
@@ -693,9 +693,9 @@ include 'sellerheader.php';
                         $productStmt = $pdo->prepare("
                           SELECT p.name, p.stock_quantity,
                             COALESCE(SUM(oi.quantity * oi.price), 0) AS total_sales
-                          FROM Products p
-                          LEFT JOIN Order_Items oi ON p.product_id = oi.product_id
-                          LEFT JOIN Orders o ON oi.order_id = o.order_id AND o.status != 'cancelled'
+                          FROM products p
+                          LEFT JOIN order_items oi ON p.product_id = oi.product_id
+                          LEFT JOIN orders o ON oi.order_id = o.order_id AND o.status != 'cancelled'
                           WHERE p.seller_id = ?
                           GROUP BY p.product_id
                           ORDER BY total_sales DESC

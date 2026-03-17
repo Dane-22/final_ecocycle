@@ -52,16 +52,16 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_type']) && $_SESSION['u
     $buyer_id = $_SESSION['user_id'];
     
     // Fetch buyer address for shipping fee calculation
-    $stmt = $pdo->prepare('SELECT address FROM Buyers WHERE buyer_id = ?');
+    $stmt = $pdo->prepare('SELECT address FROM buyers WHERE buyer_id = ?');
     $stmt->execute([$buyer_id]);
     $buyer_row = $stmt->fetch();
     $buyer_address = $buyer_row ? $buyer_row['address'] : '';
     
     $stmt = $pdo->prepare('
         SELECT c.cart_id, c.quantity, p.product_id, p.name, p.price, cat.name as category_name
-        FROM Cart c
-        JOIN Products p ON c.product_id = p.product_id
-        LEFT JOIN Categories cat ON p.category_id = cat.category_id
+        FROM cart c
+        JOIN products p ON c.product_id = p.product_id
+        LEFT JOIN categories cat ON p.category_id = cat.category_id
         WHERE c.buyer_id = ?
     ');
     $stmt->execute([$buyer_id]);

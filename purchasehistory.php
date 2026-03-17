@@ -44,8 +44,8 @@ try {
             s.fullname as seller_name,
             o.delivery_method,
             'orders' as source
-        FROM Orders o
-        JOIN Order_Items oi ON o.order_id = oi.order_id
+        FROM orders o
+        JOIN order_items oi ON o.order_id = oi.order_id
         JOIN products p ON oi.product_id = p.product_id
         JOIN sellers s ON p.seller_id = s.seller_id
         WHERE o.buyer_id = ?

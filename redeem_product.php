@@ -59,7 +59,7 @@ try {
     }
 
     // Deduct EcoCoins from user's balance (Buyers table)
-    $stmt = $pdo->prepare("UPDATE Buyers SET ecocoins_balance = ecocoins_balance - ? WHERE buyer_id = ?");
+    $stmt = $pdo->prepare("UPDATE buyers SET ecocoins_balance = ecocoins_balance - ? WHERE buyer_id = ?");
     $success = $stmt->execute([$cost, $user_id]);
 
     if (!$success) {
@@ -70,7 +70,7 @@ try {
     $pdo->commit();
 
     // Fetch user details for email
-    $stmt = $pdo->prepare("SELECT fullname, email FROM Buyers WHERE buyer_id = ?");
+    $stmt = $pdo->prepare("SELECT fullname, email FROM buyers WHERE buyer_id = ?");
     $stmt->execute([$user_id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

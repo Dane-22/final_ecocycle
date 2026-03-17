@@ -23,17 +23,17 @@ try {
             p.price,
             p.image_url,
             p.stock_quantity,
-            c.name as category,
+            cat.name as category,
             s.fullname as seller_name,
             s.address as seller_location
-        FROM Products p
-        LEFT JOIN Categories c ON p.category_id = c.category_id
-        LEFT JOIN Sellers s ON p.seller_id = s.seller_id
+        FROM products p
+        LEFT JOIN categories cat ON p.category_id = cat.category_id
+        LEFT JOIN sellers s ON p.seller_id = s.seller_id
     WHERE p.status = 'active'
         AND (
             p.name LIKE :search1 
             OR p.description LIKE :search2 
-            OR c.name LIKE :search3
+            OR cat.name LIKE :search3
             OR s.fullname LIKE :search4
             OR s.address LIKE :search5
         )
@@ -41,7 +41,7 @@ try {
             CASE 
                 WHEN p.name LIKE :search6 THEN 1
                 WHEN s.fullname LIKE :search7 THEN 2
-                WHEN c.name LIKE :search8 THEN 3
+                WHEN cat.name LIKE :search8 THEN 3
                 WHEN s.address LIKE :search9 THEN 4
                 ELSE 5
             END,
