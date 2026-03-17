@@ -197,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         }
                         
                         // Log the profile update activity
-                        $stmt = $pdo->prepare("INSERT INTO Transaction_Logs (user_id, user_type, action, description, ip_address) VALUES (?, 'seller', 'profile_update', ?, ?)");
+                        $stmt = $pdo->prepare("INSERT INTO transaction_logs (user_id, user_type, action, description, ip_address) VALUES (?, 'seller', 'profile_update', ?, ?)");
                         $description = "Profile updated: " . $fullname;
                         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
                         $stmt->execute([getCurrentUserId(), $description, $ip_address]);
