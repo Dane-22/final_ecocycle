@@ -298,7 +298,7 @@ try {
                'Profile updated' as title,
                created_at as date,
                'fas fa-user-edit' as icon
-        FROM Transaction_Logs
+        FROM transaction_logs
         WHERE user_id = ? AND user_type = 'seller' AND action = 'profile_update'
         ORDER BY created_at DESC
         LIMIT 3
