@@ -39,7 +39,7 @@ try {
 	// Get cart items for the buyer
 	$stmt = $pdo->prepare('
 		SELECT c.cart_id, c.quantity, p.product_id, p.name, p.price, p.image_url, p.stock_quantity, p.seller_id
-		FROM Cart c
+		FROM cart c
 		JOIN products p ON c.product_id = p.product_id
 		WHERE c.buyer_id = ?
 	');
@@ -148,7 +148,7 @@ try {
 	}
 
 	// Optionally clear cart
-	$stmt = $pdo->prepare('DELETE FROM Cart WHERE buyer_id = ?');
+	$stmt = $pdo->prepare('DELETE FROM cart WHERE buyer_id = ?');
 	$stmt->execute([$user_id]);
 
 	// Redirect to order receipt or confirmation, passing ecocoins_awarded
