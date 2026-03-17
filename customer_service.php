@@ -161,13 +161,17 @@ include 'homeheader.php';
         const fsBtn = document.getElementById('fullscreenBtn');
         const fsLabel = document.getElementById('fsLabel');
         const fsIcon = document.getElementById('fsIcon');
-        const root = document.documentElement; // make the whole document fullscreen
+        const root = document.documentElement;
+
+        // Exit if fullscreen button doesn't exist on this page
+        if (!fsBtn) return;
 
         function isFullscreen() {
             return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
         }
 
         function updateUI() {
+            if (!fsLabel || !fsIcon) return;
             if (isFullscreen()) {
                 fsLabel.textContent = 'Exit Fullscreen';
                 fsIcon.className = 'fa-solid fa-compress';
