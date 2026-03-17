@@ -1,0 +1,63 @@
+# Environment Configuration (NEVER COMMIT!)
+.env
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Dependencies
+vendor/
+node_modules/
+
+# Logs
+*.log
+error_log
+access_log
+debug.log
+failed_reset_emails.log
+admin_security_log.txt
+
+# Database Backups
+*.sql
+*.dump
+*.bak
+backup/
+
+# Cache and Temporary Files
+*.tmp
+*.temp
+*.cache
+/cache/
+/tmp/
+
+# Uploaded Files (keep structure but not contents)
+uploads/*
+!uploads/.gitkeep
+!uploads/index.php
+
+# Session Files
+/sessions/
+
+# Sensitive Configuration Files (if any exist outside config/)
+config.php
+wp-config.php
+
+# Build Artifacts
+/dist/
+/build/
+
+# Test Files
+test*.php
+test*.html
+*_test.php
+*_test.html
+
+# Migration Files (keep for reference but not if they contain sensitive data)
+# migrations/*.sql

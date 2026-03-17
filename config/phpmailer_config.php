@@ -1,4 +1,28 @@
 <?php
+// Load environment variables from .env file if it exists
+if (file_exists(__DIR__ . '/../.env')) {
+    $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos($line, '#') === 0) continue; // Skip comments
+        if (strpos($line, '=') === false) continue; // Skip invalid lines
+        list($key, $value) = explode('=', $line, 2);
+        $key = trim($key);
+        $value = trim($value);
+        if (!empty($key)) {
+            putenv("$key=$value");
+            $_ENV[$key] = $value;
+        }
+    }
+}
+
+// Email configuration from environment variables
+$smtpHost = getenv('SMTP_HOST') ?: 'smtp.gmail.com';
+$smtpPort = getenv('SMTP_PORT') ?: 587;
+$emailUsername = getenv('EMAIL_USERNAME') ?: 'your_email@gmail.com';
+$emailPassword = getenv('EMAIL_PASSWORD') ?: 'your_app_password';
+$emailFrom = getenv('EMAIL_FROM') ?: 'no-reply@ecocycle-nluc.com';
+$emailFromName = getenv('EMAIL_FROM_NAME') ?: 'EcoCycle NLUC';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -20,15 +44,15 @@ function sendPasswordResetEmail($toEmail, $toName, $resetToken, $userType) {
     try {
         // Server settings
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host       = $smtpHost;
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'honeyboyb.corial@gmail.com'; // Change this
-        $mail->Password   = 'keew djpl zgpw clpv'; // Change this (Google App Password)
+        $mail->Username   = $emailUsername;
+        $mail->Password   = $emailPassword;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+        $mail->Port       = $smtpPort;
         
         // Recipients
-        $mail->setFrom('no-reply@ecocycle-nluc.com', 'Ecocycle NLUC');
+        $mail->setFrom($emailFrom, $emailFromName);
         $mail->addAddress($toEmail, $toName);
         
         // Content
@@ -104,15 +128,15 @@ function sendLoginAlertEmail($toEmail, $toName, $failedAttempts, $ipAddress, $us
     try {
         // Server settings
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host       = $smtpHost;
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'your_email@gmail.com'; // Change this
-        $mail->Password   = 'your_app_password'; // Change this
+        $mail->Username   = $emailUsername;
+        $mail->Password   = $emailPassword;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+        $mail->Port       = $smtpPort;
         
         // Recipients
-        $mail->setFrom('security@ecocycle-nluc.com', 'Ecocycle NLUC Security');
+        $mail->setFrom($emailFrom, $emailFromName);
         $mail->addAddress($toEmail, $toName);
         
         // Content
@@ -199,15 +223,15 @@ function sendPasswordResetNotification($toEmail, $toName, $newPassword, $userTyp
     try {
         // Server settings
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host       = $smtpHost;
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'honeyboyb.corial@gmail.com'; // Change this
-        $mail->Password   = 'keew djpl zgpw clpv'; // Change this (Google App Password)
+        $mail->Username   = $emailUsername;
+        $mail->Password   = $emailPassword;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+        $mail->Port       = $smtpPort;
         
         // Recipients
-        $mail->setFrom('no-reply@ecocycle-nluc.com', 'Ecocycle NLUC');
+        $mail->setFrom($emailFrom, $emailFromName);
         $mail->addAddress($toEmail, $toName);
         
         // Content
@@ -300,15 +324,15 @@ function sendRedemptionConfirmationEmail($toEmail, $toName, $productName, $order
     try {
         // Server settings
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host       = $smtpHost;
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'honeyboyb.corial@gmail.com'; // Change this
-        $mail->Password   = 'keew djpl zgpw clpv'; // Change this (Google App Password)
+        $mail->Username   = $emailUsername;
+        $mail->Password   = $emailPassword;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+        $mail->Port       = $smtpPort;
         
         // Recipients
-        $mail->setFrom('no-reply@ecocycle-nluc.com', 'Ecocycle NLUC');
+        $mail->setFrom($emailFrom, $emailFromName);
         $mail->addAddress($toEmail, $toName);
         
         // Content
@@ -434,15 +458,15 @@ function sendRedemptionApprovedEmail($toEmail, $toName, $productName, $orderId, 
     try {
         // Server settings
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host       = $smtpHost;
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'honeyboyb.corial@gmail.com'; // Change this
-        $mail->Password   = 'keew djpl zgpw clpv'; // Change this (Google App Password)
+        $mail->Username   = $emailUsername;
+        $mail->Password   = $emailPassword;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+        $mail->Port       = $smtpPort;
         
         // Recipients
-        $mail->setFrom('no-reply@ecocycle-nluc.com', 'Ecocycle NLUC');
+        $mail->setFrom($emailFrom, $emailFromName);
         $mail->addAddress($toEmail, $toName);
         
         // Content
@@ -568,15 +592,15 @@ function sendRedemptionRejectedEmail($toEmail, $toName, $productName, $orderId, 
     try {
         // Server settings
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host       = $smtpHost;
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'honeyboyb.corial@gmail.com'; // Change this
-        $mail->Password   = 'keew djpl zgpw clpv'; // Change this (Google App Password)
+        $mail->Username   = $emailUsername;
+        $mail->Password   = $emailPassword;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+        $mail->Port       = $smtpPort;
         
         // Recipients
-        $mail->setFrom('no-reply@ecocycle-nluc.com', 'Ecocycle NLUC');
+        $mail->setFrom($emailFrom, $emailFromName);
         $mail->addAddress($toEmail, $toName);
         
         // Content
