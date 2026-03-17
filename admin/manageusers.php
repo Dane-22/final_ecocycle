@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $error_message = "Invalid email address.";
             } else {
                 // Check for duplicate email or username
-                $table = $user_type === 'seller' ? 'Sellers' : 'Buyers';
+                $table = $user_type === 'seller' ? 'sellers' : 'buyers';
                 $stmt = $pdo->prepare("SELECT COUNT(*) FROM $table WHERE email = ? OR username = ?");
                 $stmt->execute([$email, $username]);
                 if ($stmt->fetchColumn() > 0) {
@@ -488,13 +488,13 @@ try {
         $stmt = $pdo->prepare("
             SELECT buyer_id as id, fullname, username, email, phone_number, address, 'buyer' as user_type, 
                    COALESCE(status, 'active') as status, created_at, NULL as business_docs
-            FROM Buyers
+            FROM buyers
         ");
     } else {
         $stmt = $pdo->prepare("
             SELECT buyer_id as id, fullname, username, email, phone_number, address, 'buyer' as user_type, 
                    'active' as status, created_at, NULL as business_docs
-            FROM Buyers
+            FROM buyers
         ");
     }
     $stmt->execute();
@@ -504,7 +504,7 @@ try {
     $stmt = $pdo->prepare("
         SELECT seller_id as id, fullname, username, email, phone_number, address, 'seller' as user_type, 
                status, created_at, NULL as business_docs
-        FROM Sellers
+        FROM sellers
     ");
     $stmt->execute();
     $sellers = $stmt->fetchAll();
