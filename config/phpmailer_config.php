@@ -39,6 +39,7 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 }
 
 function sendPasswordResetEmail($toEmail, $toName, $resetToken, $userType) {
+    global $smtpHost, $emailUsername, $emailPassword, $emailFrom, $emailFromName, $smtpPort;
     $mail = new PHPMailer(true);
     
     try {
@@ -123,6 +124,7 @@ function sendPasswordResetEmail($toEmail, $toName, $resetToken, $userType) {
 }
 
 function sendLoginAlertEmail($toEmail, $toName, $failedAttempts, $ipAddress, $userType) {
+    global $smtpHost, $emailUsername, $emailPassword, $emailFrom, $emailFromName, $smtpPort;
     $mail = new PHPMailer(true);
     
     try {
@@ -218,6 +220,7 @@ function sendLoginAlertEmail($toEmail, $toName, $failedAttempts, $ipAddress, $us
 }
 
 function sendPasswordResetNotification($toEmail, $toName, $newPassword, $userType) {
+    global $smtpHost, $emailUsername, $emailPassword, $emailFrom, $emailFromName, $smtpPort;
     $mail = new PHPMailer(true);
     
     try {
@@ -319,6 +322,7 @@ function sendPasswordResetNotification($toEmail, $toName, $newPassword, $userTyp
 }
 
 function sendRedemptionConfirmationEmail($toEmail, $toName, $productName, $orderId, $ecocoinsSpent) {
+    global $smtpHost, $emailUsername, $emailPassword, $emailFrom, $emailFromName, $smtpPort;
     $mail = new PHPMailer(true);
     
     try {
@@ -453,6 +457,7 @@ function sendRedemptionConfirmationEmail($toEmail, $toName, $productName, $order
 }
 
 function sendRedemptionApprovedEmail($toEmail, $toName, $productName, $orderId, $ecocoinsSpent) {
+    global $smtpHost, $emailUsername, $emailPassword, $emailFrom, $emailFromName, $smtpPort;
     $mail = new PHPMailer(true);
     
     try {
@@ -587,6 +592,7 @@ function sendRedemptionApprovedEmail($toEmail, $toName, $productName, $orderId, 
 }
 
 function sendRedemptionRejectedEmail($toEmail, $toName, $productName, $orderId, $ecocoinsSpent) {
+    global $smtpHost, $emailUsername, $emailPassword, $emailFrom, $emailFromName, $smtpPort;
     $mail = new PHPMailer(true);
     
     try {
