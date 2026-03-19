@@ -39,7 +39,7 @@ try {
     $totalSellers = intval($stmt->fetch()['total_sellers'] ?? 0);
     
     // Get total admins
-    $stmt = $pdo->query("SELECT COUNT(*) as total_admins FROM Admins");
+    $stmt = $pdo->query("SELECT COUNT(*) as total_admins FROM admins");
     $totalAdmins = intval($stmt->fetch()['total_admins'] ?? 0);
     
     // Calculate unique users (buyers + sellers - dual accounts to avoid double counting)
