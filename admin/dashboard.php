@@ -150,6 +150,10 @@ try {
     }
     
 } catch (PDOException $e) {
+    // Log the actual error for debugging
+    error_log('Dashboard database error: ' . $e->getMessage());
+    $dbError = $e->getMessage();
+    
     // Fallback to default values if database error
     $dualAccounts = 0;
     $totalUsers = 0;
@@ -422,6 +426,12 @@ try {
             </div>
           </div>
         </div>
+
+        <?php if (isset($dbError)): ?>
+        <div class="alert alert-danger mb-4">
+          <strong>Database Error:</strong> <?php echo htmlspecialchars($dbError); ?>
+        </div>
+        <?php endif; ?>
 
         <!-- Date Filter Form -->
         <form method="get" class="mb-4 d-flex align-items-center" style="gap:12px;">
