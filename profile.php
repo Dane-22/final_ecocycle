@@ -96,8 +96,8 @@ try {
 // Check if the user has a seller account
 $has_seller_account = false;
 try {
-    $stmt = $pdo->prepare("SELECT seller_id FROM sellers WHERE buyer_id = ?");
-    $stmt->execute([getCurrentUserId()]);
+    $stmt = $pdo->prepare("SELECT seller_id FROM sellers WHERE email = ? OR username = ?");
+    $stmt->execute([$buyer['email'], $buyer['username']]);
     if ($stmt->fetch()) {
         $has_seller_account = true;
     }
