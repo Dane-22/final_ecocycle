@@ -400,7 +400,6 @@ $first_letter = strtoupper(substr($buyer['fullname'], 0, 1));
     </div>
 </div>
 
-<?php if (!$has_seller_account): ?>
 <!-- Become a Seller Section -->
 <div class="container">
     <div class="profile-section">
@@ -415,7 +414,6 @@ $first_letter = strtoupper(substr($buyer['fullname'], 0, 1));
         </div>
     </div>
 </div>
-<?php endif; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
