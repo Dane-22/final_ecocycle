@@ -57,6 +57,15 @@ try {
     if (!$success) {
         throw new Exception('Database error updating buyer ecocoins_balance');
     }
+    
+    // Check if any rows were affected
+    $rowsAffected = $stmt->rowCount();
+    if ($rowsAffected === 0) {
+        error_log("EcoCoins deduction failed: No rows updated for buyer_id=$user_id, cost=$cost");
+        throw new Exception('Failed to deduct EcoCoins. Insufficient balance or buyer not found.');
+    }
+    
+    error_log("EcoCoins deducted: buyer_id=$user_id, cost=$cost, rows_affected=$rowsAffected");
 
     // Commit transaction
     $pdo->commit();
