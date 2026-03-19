@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply_message'])) {
     $reply = trim($_POST['reply_message']);
     if ($reply) {
         try {
-            $stmt = $pdo->prepare('INSERT INTO messages (buyer_id, admin_id, sender_type, message_text, status) VALUES (?, NULL, \'buyer\', ?, \'unread\')');
+            $stmt = $pdo->prepare('INSERT INTO messages (buyer_id, admin_id, sender_type, message_text) VALUES (?, NULL, \'buyer\', ?)');
             $stmt->execute([$buyer_id, $reply]);
             $successMsg = 'Your reply has been sent!';
         } catch (Exception $e) {
