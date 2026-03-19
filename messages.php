@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply_message'])) {
             $stmt->execute([$buyer_id, $reply]);
             $successMsg = 'Your reply has been sent!';
         } catch (Exception $e) {
-            $errorMsg = 'Failed to send reply. Please try again later.';
+            error_log('Message send error: ' . $e->getMessage());
+            $errorMsg = 'Failed to send reply. Error: ' . $e->getMessage();
         }
     } else {
         $errorMsg = 'Please enter a message.';
