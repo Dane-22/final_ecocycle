@@ -3,6 +3,13 @@
 include 'config/session_check.php';
 require_once 'config/database.php';
 
+// Fix status column if needed
+try {
+    $pdo->exec("ALTER TABLE messages MODIFY COLUMN status ENUM('unread','read','replied') DEFAULT 'unread'");
+} catch (Exception $e) {
+    // Column might already be correct or table doesn't exist yet
+}
+
 // Get current buyer ID
 $buyer_id = $_SESSION['user_id'];
 $buyer_name = $_SESSION['fullname'] ?? 'You';
