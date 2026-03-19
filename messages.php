@@ -3,11 +3,24 @@
 include 'config/session_check.php';
 require_once 'config/database.php';
 
-// Fix status column if needed
+// Fix status column if needed - first check current definition, then fix
 try {
-    $pdo->exec("ALTER TABLE messages MODIFY COLUMN status ENUM('unread','read','replied') DEFAULT 'unread'");
+    // Check current column definition
+    $checkStmt = $pdo->query("SHOW COLUMNS FROM messages LIKE 'status'");
+    $columnInfo = $checkStmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($columnInfo) {
+        $currentType = $columnInfo['Type'];
+        // If current enum doesn't match what we need, update it
+        if (strpos($currentType, "'unread'") === false || strpos($currentType, "'read'") === false || strpos($currentType, "'replied'") === false) {
+            // Update existing rows to a valid value first
+            $pdo->exec("UPDATE messages SET status = 'read' WHERE status NOT IN ('unread', 'read', 'replied') OR status IS NULL");
+            // Then modify column
+            $pdo->exec("ALTER TABLE messages MODIFY COLUMN status ENUM('unread','read','replied') DEFAULT 'unread'");
+        }
+    }
 } catch (Exception $e) {
-    // Column might already be correct or table doesn't exist yet
+    // Table might not exist yet
 }
 
 // Get current buyer ID
