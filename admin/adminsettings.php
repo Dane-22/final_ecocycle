@@ -15,8 +15,32 @@ $db_user = $username ?? 'root';
 $db_pass = $password ?? '';
 $db_name = $dbname ?? 'ecocycledb';
 
-// CHANGED: Updated path for WAMP64
-$mysql_bin_path = 'C:\\wamp64\\bin\\mysql\\mysql8.4.4\\bin\\';
+// Auto-detect MySQL path for WAMP64
+$possible_mysql_paths = [
+    'C:\\wamp64\\bin\\mysql\\mysql8.4.4\\bin\\',
+    'C:\\wamp64\\bin\\mysql\\mysql8.0\\bin\\',
+    'C:\\wamp64\\bin\\mysql\\mysql8.0.30\\bin\\',
+    'C:\\wamp64\\bin\\mysql\\mysql8.0.31\\bin\\',
+    'C:\\wamp64\\bin\\mysql\\mysql5.7\\bin\\',
+    'C:\\wamp64\\bin\\mysql\\mysql5.7.39\\bin\\',
+    'C:\\xampp\\mysql\\bin\\',
+];
+
+$mysql_bin_path = '';
+$detected_path_msg = '';
+foreach ($possible_mysql_paths as $path) {
+    if (file_exists($path . 'mysqldump.exe')) {
+        $mysql_bin_path = $path;
+        $detected_path_msg = "Found MySQL at: " . $path;
+        break;
+    }
+}
+
+// If no path found, show error
+if (empty($mysql_bin_path)) {
+    $mysql_bin_path = 'C:\\wamp64\\bin\\mysql\\mysql8.4.4\\bin\\';
+    $detected_path_msg = "WARNING: mysqldump.exe not found in common locations. Tried: " . implode(", ", $possible_mysql_paths);
+}
 
 $backup_message = '';
 $restore_message = '';
@@ -41,7 +65,9 @@ try {
 // Handle backup and force download
 if (isset($_POST['backup'])) {
     $mysqldump = $mysql_bin_path . 'mysqldump.exe';
-    $backup_dir = __DIR__ . '/../backup/';
+    
+    // Use absolute path with proper directory separators for Windows
+    $backup_dir = realpath(__DIR__ . '/../') . '\\backup\\';
     
     // Ensure backup directory exists
     if (!is_dir($backup_dir)) {
@@ -50,9 +76,10 @@ if (isset($_POST['backup'])) {
     
     $backup_file = $backup_dir . 'ecocycle_backup_' . date('Ymd_His') . '.sql';
     
-    // FIXED: Proper password handling and error redirection
+    // FIXED: Proper password handling and error redirection with Windows paths
     $pass_part = !empty($db_pass) ? "--password=\"{$db_pass}\"" : "";
-    $command = "\"$mysqldump\" --user={$db_user} {$pass_part} --host={$db_host} {$db_name} > \"{$backup_file}\" 2>&1";
+    $backup_file_escaped = str_replace('\\', '\\\\', $backup_file);
+    $command = "\"{$mysqldump}\" --user={$db_user} {$pass_part} --host={$db_host} {$db_name} > \"{$backup_file}\" 2>&1";
     
     exec($command, $output, $result);
     
@@ -71,9 +98,14 @@ if (isset($_POST['backup'])) {
         readfile($backup_file);
         exit;
     } else {
-        $error_msg = "Backup failed. Command: " . htmlspecialchars($command) . "<br>";
+        $error_msg = "Backup failed.<br>";
+        if (!empty($detected_path_msg)) {
+            $error_msg .= "Path detection: " . htmlspecialchars($detected_path_msg) . "<br>";
+        }
+        $error_msg .= "Command: " . htmlspecialchars($command) . "<br>";
         $error_msg .= "Output: " . htmlspecialchars(implode("\n", $output)) . "<br>";
-        $error_msg .= "Result code: " . $result;
+        $error_msg .= "Result code: " . $result . "<br>";
+        $error_msg .= "mysqldump exists: " . (file_exists($mysqldump) ? 'YES' : 'NO at ' . htmlspecialchars($mysqldump));
         $backup_message = $error_msg;
         $backup_success = false;
     }
