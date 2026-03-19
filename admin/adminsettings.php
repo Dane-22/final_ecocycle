@@ -15,8 +15,8 @@ $db_user = $username ?? 'root';
 $db_pass = $password ?? '';
 $db_name = $dbname ?? 'ecocycledb';
 
-// CHANGED: Updated path for XAMPP
-$mysql_bin_path = 'C:\\xampp\\mysql\\bin\\';
+// CHANGED: Updated path for WAMP64
+$mysql_bin_path = 'C:\\wamp64\\bin\\mysql\\mysql8.4.4\\bin\\';
 
 $backup_message = '';
 $restore_message = '';
