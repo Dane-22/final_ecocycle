@@ -57,7 +57,7 @@ try {
     }
 
     // Create new seller account
-    $stmt = $pdo->prepare('INSERT INTO Sellers (fullname, username, phone_number, email, password, address, status) VALUES (?, ?, ?, ?, ?, ?, "active")');
+    $stmt = $pdo->prepare('INSERT INTO sellers (fullname, username, phone_number, email, password, address, status) VALUES (?, ?, ?, ?, ?, ?, "active")');
     $stmt->execute([
         $fullname,
         $username,
@@ -82,6 +82,6 @@ try {
 } catch (PDOException $e) {
     error_log("Error creating seller account: " . $e->getMessage());
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'message' => 'Database error occurred. Please try again.']);
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
 ?>
