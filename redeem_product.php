@@ -31,14 +31,6 @@ try {
     // Start transaction
     $pdo->beginTransaction();
 
-    // Insert into Redemptions table
-    $stmt = $pdo->prepare("INSERT INTO Redemptions (user_id, product_id, ecocoins_spent, order_id, redeemed_at) VALUES (?, ?, ?, ?, NOW())");
-    $success = $stmt->execute([$user_id, $productId, $cost, $orderId]);
-
-    if (!$success) {
-        throw new Exception('Database error inserting into Redemptions');
-    }
-
     // Insert into bardproductsredeem table
     $stmt = $pdo->prepare("INSERT INTO bardproductsredeem 
         (user_id, user_type, product_id, quantity, ecocoins_spent, status, cost, order_id) 
