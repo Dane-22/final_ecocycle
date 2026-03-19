@@ -318,13 +318,18 @@ $first_letter = strtoupper(substr($buyer['fullname'], 0, 1));
 
     <!-- Personal Information Section -->
     <div class="profile-section">
-        <!-- DEBUG: Remove after testing -->
-        <div class="alert alert-warning mb-3">
-            <strong>Debug:</strong> has_seller_account = <?php echo $has_seller_account ? 'TRUE' : 'FALSE'; ?>, 
-            Email: <?php echo htmlspecialchars($buyer['email']); ?>, 
-            Username: <?php echo htmlspecialchars($buyer['username']); ?>
-            <?php if ($seller_check_error): ?><br>Error: <?php echo htmlspecialchars($seller_check_error); ?><?php endif; ?>
+        <?php if ($has_seller_account): ?>
+        <!-- Already a seller - show link to seller dashboard -->
+        <div class="alert alert-success d-flex align-items-center justify-content-between mb-3" role="alert">
+            <div>
+                <i class="fas fa-store me-2"></i>
+                <strong>You already have a seller account!</strong> Manage your products and sales.
+            </div>
+            <a href="seller-dashboard.php" class="btn btn-success ms-3">
+                <i class="fas fa-arrow-right me-1"></i> Go to Seller Dashboard
+            </a>
         </div>
+        <?php endif; ?>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="section-title mb-0">
                 <i class="fas fa-user"></i>
