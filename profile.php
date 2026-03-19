@@ -95,6 +95,7 @@ try {
 
 // Check if the user has a seller account
 $has_seller_account = false;
+$seller_check_error = '';
 try {
     $stmt = $pdo->prepare("SELECT seller_id FROM sellers WHERE email = ? OR username = ?");
     $stmt->execute([$buyer['email'], $buyer['username']]);
@@ -103,6 +104,7 @@ try {
     }
 } catch (PDOException $e) {
     // Log the error for debugging
+    $seller_check_error = $e->getMessage();
     error_log("Error checking seller account: " . $e->getMessage());
 }
 
@@ -316,6 +318,13 @@ $first_letter = strtoupper(substr($buyer['fullname'], 0, 1));
 
     <!-- Personal Information Section -->
     <div class="profile-section">
+        <!-- DEBUG: Remove after testing -->
+        <div class="alert alert-warning mb-3">
+            <strong>Debug:</strong> has_seller_account = <?php echo $has_seller_account ? 'TRUE' : 'FALSE'; ?>, 
+            Email: <?php echo htmlspecialchars($buyer['email']); ?>, 
+            Username: <?php echo htmlspecialchars($buyer['username']); ?>
+            <?php if ($seller_check_error): ?><br>Error: <?php echo htmlspecialchars($seller_check_error); ?><?php endif; ?>
+        </div>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="section-title mb-0">
                 <i class="fas fa-user"></i>
